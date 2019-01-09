@@ -1,5 +1,6 @@
-schema = """
-{
+from jsonschema import validate
+
+schema = {
     "$schema": "http://json-schema.org/draft-04/schema#",
     "type": "object",
     "title": "Dilemma",
@@ -58,4 +59,17 @@ schema = """
         }
     }
 }
-"""
+
+if __name__ == '__main__':
+    validate({
+        "firstOption": [
+            {
+                "age": 1
+            }
+        ],
+        "secondOption": [
+            {
+                "age": 1
+            }
+        ]
+    }, schema)
