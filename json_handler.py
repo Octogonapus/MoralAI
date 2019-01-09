@@ -1,75 +1,68 @@
-from jsonschema import validate
+import unittest
+from dataclasses import dataclass
+from enum import Enum
+from typing import List
 
-schema = {
-    "$schema": "http://json-schema.org/draft-04/schema#",
-    "type": "object",
-    "title": "Dilemma",
-    "description": "A moral dilemma containing two options",
-    "properties": {
-        "firstOption": {
-            "type": "array",
-            "items": {
-                "$ref": "#/definitions/person"
-            }
-        },
-        "secondOption": {
-            "type": "array",
-            "items": {
-                "$ref": "#/definitions/person"
-            }
-        }
-    },
-    "additionalProperties": False,
-    "required": ["firstOption", "secondOption"],
-    "definitions": {
-        "person": {
-            "type": "object",
-            "title": "Person",
-            "description": "A person with varying attributes",
-            "properties": {
-                "age": {
-                    "type": "number",
-                    "minimum": 0
-                },
-                "race": {
-                    "type": "string",
-                    "enum": [
-                        "white",
-                        "black",
-                        "asian",
-                        "native american",
-                        "other race"
-                    ]
-                },
-                "legal sex": {
-                    "type": "string",
-                    "enum": [
-                        "male",
-                        "female"
-                    ]
-                },
-                "jaywalking": {
-                    "type": "boolean"
-                },
-                "driving under the influence": {
-                    "type": "boolean"
-                }
-            },
-            "additionalProperties": False
-        }
-    }
-}
+import jsonpickle as jsonpickle
+
+
+class Race(Enum):
+    white = 1
+    black = 2
+    asian = 3
+    native_american = 4
+    other_race = 5
+
+
+class LegalSex(Enum):
+    male = 1
+    female = 2
+
+
+@dataclass
+class Person:
+    def __init__(self, age: int = None, race: Race = None, legal_sex: LegalSex = None,
+                 jaywalking: bool = None, driving_under_the_influence: bool = None):
+        self.age = age
+        self.race = race
+        self.legal_sex = legal_sex
+        self.jaywalking = jaywalking
+        self.driving_under_the_influence = driving_under_the_influence
+
+
+@dataclass
+class Dilemma:
+    def __init__(self, first_option: List[Person], second_option: List[Person]):
+        self.firstOption = first_option
+        self.secondOption = second_option
+
+
+class TestJsonParsing(unittest.TestCase):
+
+    def test_pickling_dilemma(self):
+        data = Dilemma(
+            [
+                Person(
+                    1,
+                    Race.black,
+                    LegalSex.male,
+                    False,
+                    True
+                )
+            ],
+            [
+                Person(
+                    2,
+                    Race.white,
+                    LegalSex.female,
+                    True,
+                    False
+                )
+            ]
+        )
+
+        self.assertEqual(jsonpickle.decode(jsonpickle.encode(data)), data)
+
 
 if __name__ == '__main__':
-    validate({
-        "firstOption": [
-            {
-                "age": 1
-            }
-        ],
-        "secondOption": [
-            {
-                "age": 1
-            }
-        ]
-    }, schema)
+    unittest.main()
