@@ -36,6 +36,12 @@ class Dilemma:
         self.firstOption = first_option
         self.secondOption = second_option
 
+def load_dilemmas_from_file(path):
+    data_file = open(path, "r")
+    result = jsonpickle.decode(data_file.read())
+    data_file.close()
+    return result
+
 
 class TestJsonParsing(unittest.TestCase):
 
