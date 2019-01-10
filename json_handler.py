@@ -1,7 +1,4 @@
 import unittest
-from dataclasses import dataclass
-from enum import Enum
-from typing import List
 
 import jsonpickle as jsonpickle
 
@@ -40,7 +37,6 @@ class TestJsonParsing(unittest.TestCase):
         )
 
         self.assertEqual(jsonpickle.decode(jsonpickle.encode(data)), data)
-        print("test")
 
 
 if __name__ == '__main__':

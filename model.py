@@ -89,7 +89,7 @@ class Person:
             else:
                 return [0, 0, 1]
 
-    def export(self):
+    def export_raw(self):
         return self.export_age() + self.export_race() + self.export_legal_sex() + \
                self.export_jaywalking() + self.export_driving_under_the_influence()
 
@@ -100,11 +100,20 @@ class Dilemma:
         self.firstOption = first_option
         self.secondOption = second_option
 
-    def export(self):
-        return np.array(
-            reduce(lambda a, b: a + b, map(lambda a: a.export(), self.firstOption)) +
-            reduce(lambda a, b: a + b, map(lambda a: a.export(), self.secondOption))
+    @staticmethod
+    def export_option(option: List[Person]):
+        return [] if len(option) is 0 else reduce(
+            lambda a, b: a + b, map(lambda a: a.export_raw(), option)
         )
+
+    def export_raw(self):
+        return [
+            *self.export_option(self.firstOption),
+            *self.export_option(self.secondOption)
+        ]
+
+    def export(self):
+        return np.array(self.export_raw())
 
 
 class TestPersonExport(unittest.TestCase):
@@ -113,7 +122,7 @@ class TestPersonExport(unittest.TestCase):
         person = Person()
 
         self.assertEqual(
-            person.export(),
+            person.export_raw(),
             [
                 1, 0, 0, 0, 0, 0, 0,
                 1, 0, 0, 0, 0, 0,
@@ -133,13 +142,44 @@ class TestPersonExport(unittest.TestCase):
         )
 
         self.assertEqual(
-            person.export(),
+            person.export_raw(),
             [
                 0, 0, 1, 0, 0, 0, 0,
                 0, 0, 0, 0, 1, 0,
                 0, 0, 1,
                 0, 1, 0,
                 0, 0, 1
+            ]
+        )
+
+
+class TestDilemmaExport(unittest.TestCase):
+
+    def testExportWithEmptyDilemma(self):
+        dilemma = Dilemma([], [])
+
+        self.assertEqual(
+            dilemma.export_raw(),
+            []
+        )
+
+    def testExportWithDilemmaOfTwoEmptyPeople(self):
+        dilemma = Dilemma([Person()], [Person()])
+
+        raw = dilemma.export_raw()
+        self.assertEqual(
+            raw,
+            [
+                1, 0, 0, 0, 0, 0, 0,
+                1, 0, 0, 0, 0, 0,
+                1, 0, 0,
+                1, 0, 0,
+                1, 0, 0,
+                1, 0, 0, 0, 0, 0, 0,
+                1, 0, 0, 0, 0, 0,
+                1, 0, 0,
+                1, 0, 0,
+                1, 0, 0
             ]
         )
 
