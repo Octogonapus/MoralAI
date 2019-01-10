@@ -40,6 +40,7 @@ class TestJsonParsing(unittest.TestCase):
         )
 
         self.assertEqual(jsonpickle.decode(jsonpickle.encode(data)), data)
+        print("test")
 
 
 if __name__ == '__main__':

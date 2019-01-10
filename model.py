@@ -1,3 +1,4 @@
+import unittest
 from dataclasses import dataclass
 from enum import Enum
 from functools import reduce
@@ -104,3 +105,44 @@ class Dilemma:
             reduce(lambda a, b: a + b, map(lambda a: a.export(), self.firstOption)) +
             reduce(lambda a, b: a + b, map(lambda a: a.export(), self.secondOption))
         )
+
+
+class TestPersonExport(unittest.TestCase):
+
+    def testExportWithEmptyPerson(self):
+        person = Person()
+
+        self.assertEqual(
+            person.export(),
+            [
+                1, 0, 0, 0, 0, 0, 0,
+                1, 0, 0, 0, 0, 0,
+                1, 0, 0,
+                1, 0, 0,
+                1, 0, 0
+            ]
+        )
+
+    def testExportWithFullPerson(self):
+        person = Person(
+            age=16,
+            race=Race.native_american,
+            legal_sex=LegalSex.female,
+            jaywalking=True,
+            driving_under_the_influence=False
+        )
+
+        self.assertEqual(
+            person.export(),
+            [
+                0, 0, 1, 0, 0, 0, 0,
+                0, 0, 0, 0, 1, 0,
+                0, 0, 1,
+                0, 1, 0,
+                0, 0, 1
+            ]
+        )
+
+
+if __name__ == '__main__':
+    unittest.main()
