@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from enum import Enum
+from functools import reduce
 from typing import List
 
 import numpy as np
@@ -88,10 +89,8 @@ class Person:
                 return [0, 0, 1]
 
     def export(self):
-        np.array(
-            self.export_age() + self.export_race() + self.export_legal_sex() +
-            self.export_jaywalking() + self.export_driving_under_the_influence()
-        )
+        return self.export_age() + self.export_race() + self.export_legal_sex() + \
+               self.export_jaywalking() + self.export_driving_under_the_influence()
 
 
 @dataclass
@@ -99,3 +98,9 @@ class Dilemma:
     def __init__(self, first_option: List[Person], second_option: List[Person]):
         self.firstOption = first_option
         self.secondOption = second_option
+
+    def export(self):
+        return np.array(
+            reduce(lambda a, b: a + b, map(lambda a: a.export(), self.firstOption)) +
+            reduce(lambda a, b: a + b, map(lambda a: a.export(), self.secondOption))
+        )
