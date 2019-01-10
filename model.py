@@ -1,5 +1,4 @@
 import unittest
-from dataclasses import dataclass
 from enum import Enum
 from functools import reduce
 from typing import List
@@ -20,7 +19,6 @@ class LegalSex(Enum):
     female = 2
 
 
-@dataclass
 class Person:
     def __init__(self, age: int = None, race: Race = None, legal_sex: LegalSex = None,
                  jaywalking: bool = None, driving_under_the_influence: bool = None):
@@ -94,7 +92,6 @@ class Person:
                self.export_jaywalking() + self.export_driving_under_the_influence()
 
 
-@dataclass
 class Dilemma:
     def __init__(self, first_option: List[Person], second_option: List[Person]):
         self.firstOption = first_option
