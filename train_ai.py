@@ -1,8 +1,9 @@
 import jsonpickle as jsonpickle
-from keras import losses
+from keras import losses, metrics
 from keras.models import Sequential
 from keras.layers import Dense
 from keras.utils import plot_model
+import matplotlib.pyplot as plt
 
 from generate_training_data import generate_training_data, TrainMetadata
 
@@ -82,7 +83,7 @@ if __name__ == '__main__':
 
     model.compile(loss=losses.categorical_crossentropy,
                   optimizer='sgd',
-                  metrics=['accuracy'])
+                  metrics=[metrics.categorical_accuracy])
 
     model.fit(train_data, train_labels, epochs=1, batch_size=32)
 
@@ -91,3 +92,8 @@ if __name__ == '__main__':
     print(loss)
     print("Accuracy:")
     print(accuracy)
+
+    print("Predictions:")
+    print(model.predict(test_data))
+    print("Expected:")
+    print(test_labels)
