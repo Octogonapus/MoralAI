@@ -91,22 +91,33 @@ class Person:
         return self.export_age() + self.export_race() + self.export_legal_sex() + \
                self.export_jaywalking() + self.export_driving_under_the_influence()
 
+    @staticmethod
+    def get_unspecified():
+        return [0, 0, 0, 0, 0, 0, 0,
+                0, 0, 0, 0, 0, 0,
+                0, 0, 0,
+                0, 0, 0,
+                0, 0, 0]
+
 
 class Dilemma:
-    def __init__(self, first_option: List[Person], second_option: List[Person]):
-        self.firstOption = first_option
-        self.secondOption = second_option
+    def __init__(self, first_option: List[Person], second_option: List[Person], max_size: int):
+        self.first_option = first_option
+        self.second_option = second_option
+        self.max_size = max_size
 
-    @staticmethod
-    def export_option(option: List[Person]):
-        return [] if len(option) is 0 else reduce(
-            lambda a, b: a + b, map(lambda a: a.export_raw(), option)
-        )
+    def export_option(self, option: List[Person]):
+        return [
+            *([] if len(option) is 0 else reduce(
+                lambda a, b: a + b, map(lambda a: a.export_raw(), option)
+            )),
+            *(Person.get_unspecified() * (self.max_size - len(option)))
+        ]
 
     def export_raw(self):
         return [
-            *self.export_option(self.firstOption),
-            *self.export_option(self.secondOption)
+            *self.export_option(self.first_option),
+            *self.export_option(self.second_option)
         ]
 
     def export(self):
@@ -153,15 +164,55 @@ class TestPersonExport(unittest.TestCase):
 class TestDilemmaExport(unittest.TestCase):
 
     def testExportWithEmptyDilemma(self):
-        dilemma = Dilemma([], [])
+        dilemma = Dilemma([], [], 1)
 
         self.assertEqual(
             dilemma.export_raw(),
-            []
+            [
+                0, 0, 0, 0, 0, 0, 0,
+                0, 0, 0, 0, 0, 0,
+                0, 0, 0,
+                0, 0, 0,
+                0, 0, 0,
+                0, 0, 0, 0, 0, 0, 0,
+                0, 0, 0, 0, 0, 0,
+                0, 0, 0,
+                0, 0, 0,
+                0, 0, 0
+            ]
+        )
+
+    def testExportWithEmptyDilemmaWithMaxSize2(self):
+        dilemma = Dilemma([], [], 2)
+
+        self.assertEqual(
+            dilemma.export_raw(),
+            [
+                0, 0, 0, 0, 0, 0, 0,
+                0, 0, 0, 0, 0, 0,
+                0, 0, 0,
+                0, 0, 0,
+                0, 0, 0,
+                0, 0, 0, 0, 0, 0, 0,
+                0, 0, 0, 0, 0, 0,
+                0, 0, 0,
+                0, 0, 0,
+                0, 0, 0,
+                0, 0, 0, 0, 0, 0, 0,
+                0, 0, 0, 0, 0, 0,
+                0, 0, 0,
+                0, 0, 0,
+                0, 0, 0,
+                0, 0, 0, 0, 0, 0, 0,
+                0, 0, 0, 0, 0, 0,
+                0, 0, 0,
+                0, 0, 0,
+                0, 0, 0
+            ]
         )
 
     def testExportWithDilemmaOfTwoEmptyPeople(self):
-        dilemma = Dilemma([Person()], [Person()])
+        dilemma = Dilemma([Person()], [Person()], 1)
 
         raw = dilemma.export_raw()
         self.assertEqual(
@@ -177,6 +228,36 @@ class TestDilemmaExport(unittest.TestCase):
                 1, 0, 0,
                 1, 0, 0,
                 1, 0, 0
+            ]
+        )
+
+    def testExportWithDilemmaOfTwoEmptyPeopleWithMaxSize2(self):
+        dilemma = Dilemma([Person()], [Person()], 2)
+
+        raw = dilemma.export_raw()
+        self.assertEqual(
+            raw,
+            [
+                1, 0, 0, 0, 0, 0, 0,
+                1, 0, 0, 0, 0, 0,
+                1, 0, 0,
+                1, 0, 0,
+                1, 0, 0,
+                0, 0, 0, 0, 0, 0, 0,
+                0, 0, 0, 0, 0, 0,
+                0, 0, 0,
+                0, 0, 0,
+                0, 0, 0,
+                1, 0, 0, 0, 0, 0, 0,
+                1, 0, 0, 0, 0, 0,
+                1, 0, 0,
+                1, 0, 0,
+                1, 0, 0,
+                0, 0, 0, 0, 0, 0, 0,
+                0, 0, 0, 0, 0, 0,
+                0, 0, 0,
+                0, 0, 0,
+                0, 0, 0
             ]
         )
 
