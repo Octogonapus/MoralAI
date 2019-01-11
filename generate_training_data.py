@@ -4,6 +4,13 @@ import numpy as np
 from model import Person, Dilemma, Race, LegalSex
 
 
+class TrainMetadata:
+
+    def __init__(self, train_data_size: int, max_num_people_per_option: int):
+        self.train_data_size = train_data_size
+        self.max_num_people_per_option = max_num_people_per_option
+
+
 def generate_random_person():
     return Person(
         age=random.randint(1, 60),
