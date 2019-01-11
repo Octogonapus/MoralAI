@@ -26,8 +26,8 @@ def generate_empty_person():
 
 
 def generate_training_data_raw(first_option_size: int, second_option_size: int, max_size: int):
-    first_option = [generate_empty_person() for _ in range(first_option_size)]
-    second_option = [generate_empty_person() for _ in range(second_option_size)]
+    first_option = [generate_random_person() for _ in range(first_option_size)]
+    second_option = [generate_random_person() for _ in range(second_option_size)]
     dilemma = Dilemma(first_option, second_option, max_size)
     label = [1, 0] if first_option_size >= second_option_size else [0, 1]
     return dilemma.export_raw(), label
