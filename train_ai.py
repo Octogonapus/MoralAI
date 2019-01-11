@@ -14,7 +14,9 @@ if __name__ == '__main__':
     model = Sequential()
 
     # Input layer dimension is 44. Each option is 22 elements and there are two options.
-    model.add(Dense(units=22, activation='relu', input_dim=44))
+    model.add(Dense(units=44, activation='relu', input_dim=44))
+
+    model.add(Dense(units=22, activation='relu'))
 
     # Output layer dimension is 1 because it outputs 0 for first option and 1 for second option.
     model.add(Dense(units=1, activation='softmax'))
