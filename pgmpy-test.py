@@ -128,6 +128,7 @@ if __name__ == '__main__':
     print("Driving under the influence CPD:")
     print(model.get_cpds(var_driving_under_the_influence))
 
+    # noinspection PyTypeChecker
     infer = VariableElimination(model)
 
 
