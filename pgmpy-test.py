@@ -3,17 +3,21 @@ from pgmpy.models import BayesianModel
 from pgmpy.factors.discrete import TabularCPD
 from pgmpy.inference import VariableElimination
 
-from model import Dilemma, Person
+from model import Dilemma, Person, Race, LegalSex
 
 if __name__ == '__main__':
     var_option = "option"
     var_age = "age"
+    var_race = "race"
+    var_legal_sex = "legal_sex"
     var_jaywalking = "jaywalking"
     var_driving_under_the_influence = "driving_under_the_influence"
 
     # Define edges
     model = BayesianModel([
         (var_option, var_age),
+        (var_option, var_race),
+        (var_option, var_legal_sex),
         (var_option, var_jaywalking),
         (var_option, var_driving_under_the_influence)
     ])
@@ -41,7 +45,34 @@ if __name__ == '__main__':
         evidence_card=[2]
     )
 
-    # Jaywalking boolean, 0 = jaywalking
+    # Race enum
+    cpd_race = TabularCPD(
+        variable=var_race,
+        variable_card=5,
+        values=[
+            [1 / 5, 1 / 5],
+            [1 / 5, 1 / 5],
+            [1 / 5, 1 / 5],
+            [1 / 5, 1 / 5],
+            [1 / 5, 1 / 5]
+        ],
+        evidence=[var_option],
+        evidence_card=[2]
+    )
+
+    # Legal sex enum
+    cpd_legal_sex = TabularCPD(
+        variable=var_legal_sex,
+        variable_card=2,
+        values=[
+            [0.5, 0.5],
+            [0.5, 0.5]
+        ],
+        evidence=[var_option],
+        evidence_card=[2]
+    )
+
+    # Jaywalking boolean, 1 = True
     cpd_jaywalking = TabularCPD(
         variable=var_jaywalking,
         variable_card=2,
@@ -53,6 +84,7 @@ if __name__ == '__main__':
         evidence_card=[2]
     )
 
+    # Driving under the influence boolean, 1 = True
     cpd_driving_under_the_influence = TabularCPD(
         variable=var_driving_under_the_influence,
         variable_card=2,
@@ -68,6 +100,8 @@ if __name__ == '__main__':
     model.add_cpds(
         cpd_option,
         cpd_age,
+        cpd_race,
+        cpd_legal_sex,
         cpd_jaywalking,
         cpd_driving_under_the_influence
     )
@@ -81,6 +115,12 @@ if __name__ == '__main__':
 
     print("Age CPD:")
     print(model.get_cpds(var_age))
+
+    print("Race CPD:")
+    print(model.get_cpds(var_race))
+
+    print("Legal sex CPD:")
+    print(model.get_cpds(var_legal_sex))
 
     print("Jaywalking CPD:")
     print(model.get_cpds(var_jaywalking))
@@ -101,15 +141,23 @@ if __name__ == '__main__':
         age_states = [10, 20, 30, 40, 50, 60]
         age_probability = map_infer_to_list(infer_values_given_option(var_age))
 
-        jaywalking_states = [True, False]
+        race_states = [Race.white, Race.black, Race.asian, Race.native_american, Race.other_race]
+        race_probability = map_infer_to_list(infer_values_given_option(var_race))
+
+        legal_sex_states = [LegalSex.male, LegalSex.female]
+        legal_sex_probability = map_infer_to_list(infer_values_given_option(var_legal_sex))
+
+        jaywalking_states = [False, True]
         jaywalking_probability = map_infer_to_list(infer_values_given_option(var_jaywalking))
 
-        driving_under_the_influence_states = [True, False]
+        driving_under_the_influence_states = [False, True]
         driving_under_the_influence_probability = map_infer_to_list(
             infer_values_given_option(var_driving_under_the_influence)
         )
 
         age_choices = choices(age_states, age_probability, k=option_size)
+        race_choices = choices(race_states, race_probability, k=option_size)
+        legal_sex_choices = choices(legal_sex_states, legal_sex_probability, k=option_size)
         jaywalking_choices = choices(jaywalking_states, jaywalking_probability, k=option_size)
         driving_under_the_influence_choices = choices(driving_under_the_influence_states,
                                                       driving_under_the_influence_probability,
@@ -117,6 +165,8 @@ if __name__ == '__main__':
 
         return [Person(
             age=age_choices[i],
+            race=race_choices[i],
+            legal_sex=legal_sex_choices[i],
             jaywalking=jaywalking_choices[i],
             driving_under_the_influence=driving_under_the_influence_choices[i]
         ) for i in range(option_size)]
