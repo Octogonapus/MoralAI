@@ -152,6 +152,8 @@ class DilemmaGenerator:
         # noinspection PyTypeChecker
         self.infer = VariableElimination(self.model)
 
+        self.option_probability = self.infer.query(["option"])["option"].values
+
     def generate_person_list(self, option_size: int, option: int):
         def infer_values_given_option(variable: str):
             return self.infer.query(
@@ -195,9 +197,8 @@ class DilemmaGenerator:
         ) for i in range(option_size)]
 
     def generate_dilemma(self, max_num_people: int):
-        option_probability = self.infer.query(["option"])["option"].values
-        first_option_size = round(max_num_people * option_probability[0].item())
-        second_option_size = round(max_num_people * option_probability[1].item())
+        first_option_size = round(max_num_people * self.option_probability[0].item())
+        second_option_size = round(max_num_people * self.option_probability[1].item())
 
         first_option = self.generate_person_list(first_option_size, 0)
         second_option = self.generate_person_list(second_option_size, 1)
@@ -207,16 +208,3 @@ class DilemmaGenerator:
         label = [1, 0] if first_option_size >= second_option_size else [0, 1]
 
         return dilemma, label
-
-
-if __name__ == '__main__':
-    max_num_people = 10
-    dilemma_count = 100
-    generator = DilemmaGenerator(
-        jaywalking_vals=[
-            [1 / 3, 2 / 3],
-            [2 / 3, 1 / 3]
-        ],
-        debug=True
-    )
-    dilemmas = [generator.generate_dilemma(max_num_people) for _ in range(dilemma_count)]

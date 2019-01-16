@@ -1,68 +1,17 @@
-import jsonpickle as jsonpickle
 from keras import losses, metrics
 from keras.models import Sequential
 from keras.layers import Dense
 from keras.utils import plot_model
-import matplotlib.pyplot as plt
 
-from generate_training_data import generate_training_data, TrainMetadata
-
-
-def write_data_to_file(metadata: TrainMetadata, type: str):
-    (data, labels) = generate_training_data(metadata.max_num_people_per_option,
-                                            metadata.train_data_size)
-
-    data_file = open(type + "_data", "w")
-    data_file.write(jsonpickle.encode(data))
-    data_file.close()
-
-    labels_file = open(type + "_labels", "w")
-    labels_file.write(jsonpickle.encode(labels))
-    labels_file.close()
-
-    metadata_file = open(type + "_metadata", "w")
-    metadata_file.write(jsonpickle.encode(metadata))
-    metadata_file.close()
-
-
-def read_data_from_file(type: str):
-    data_file = open(type + "_data", "r")
-    data = jsonpickle.decode(data_file.read())
-    data_file.close()
-
-    labels_file = open(type + "_labels", "r")
-    labels = jsonpickle.decode(labels_file.read())
-    labels_file.close()
-
-    metadata_file = open(type + "_metadata", "r")
-    metadata = jsonpickle.decode(metadata_file.read())
-    metadata_file.close()
-
-    return data, labels, metadata
-
-
-def write_training_data_to_file(train_metadata: TrainMetadata):
-    return write_data_to_file(train_metadata, "train")
-
-
-def read_training_data_from_file():
-    return read_data_from_file("train")
-
-
-def write_test_data_to_file(test_metadata: TrainMetadata):
-    return write_data_to_file(test_metadata, "test")
-
-
-def read_test_data_from_file():
-    return read_data_from_file("test")
-
+from generate_data_pgmpy import DilemmaGenerator
+from manage_data import TrainMetadata, write_data_to_file, read_data_from_file
 
 if __name__ == '__main__':
-    # write_training_data_to_file(TrainMetadata(100000, 10))
-    # write_test_data_to_file(TrainMetadata(100000, 10))
+    write_data_to_file(TrainMetadata(100, 10), DilemmaGenerator(), "train_random")
+    write_data_to_file(TrainMetadata(10, 10), DilemmaGenerator(), "test")
 
-    (train_data, train_labels, train_metadata) = read_training_data_from_file()
-    (test_data, test_labels, test_metadata) = read_test_data_from_file()
+    (train_data, train_labels, train_metadata) = read_data_from_file("train_random")
+    (test_data, test_labels, test_metadata) = read_data_from_file("test")
 
     model = Sequential()
 
