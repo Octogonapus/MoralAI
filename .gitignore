@@ -1,5 +1,6 @@
 venv
 .idea
 __pycache__
-test_*
-train_*
+*_data
+*_labels
+*_metadata
