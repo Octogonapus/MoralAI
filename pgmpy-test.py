@@ -5,7 +5,8 @@ from pgmpy.inference import VariableElimination
 
 from model import Dilemma, Person, Race, LegalSex
 
-if __name__ == '__main__':
+
+class DilemmaGenerator:
     var_option = "option"
     var_age = "age"
     var_race = "race"
@@ -13,147 +14,168 @@ if __name__ == '__main__':
     var_jaywalking = "jaywalking"
     var_driving_under_the_influence = "driving_under_the_influence"
 
-    # Define edges
-    model = BayesianModel([
-        (var_option, var_age),
-        (var_option, var_race),
-        (var_option, var_legal_sex),
-        (var_option, var_jaywalking),
-        (var_option, var_driving_under_the_influence)
-    ])
+    cpd_option_values = [[0.5, 0.5]]
+    cpd_age_values = [
+        [1 / 6, 1 / 6],
+        [1 / 6, 1 / 6],
+        [1 / 6, 1 / 6],
+        [1 / 6, 1 / 6],
+        [1 / 6, 1 / 6],
+        [1 / 6, 1 / 6]
+    ]
+    cpd_race_values = [
+        [1 / 5, 1 / 5],
+        [1 / 5, 1 / 5],
+        [1 / 5, 1 / 5],
+        [1 / 5, 1 / 5],
+        [1 / 5, 1 / 5]
+    ]
+    cpd_legal_sex_values = [
+        [0.5, 0.5],
+        [0.5, 0.5]
+    ]
+    cpd_jaywalking_values = [
+        [0.5, 0.5],
+        [0.5, 0.5]
+    ]
+    cpd_driving_under_the_influence_values = [
+        [0.5, 0.5],
+        [0.5, 0.5]
+    ]
 
-    # First or second option
-    cpd_option = TabularCPD(
-        variable=var_option,
-        variable_card=2,
-        values=[[0.5, 0.5]]
-    )
+    def __init__(self, option_vals=None, age_vals=None, race_vals=None, legal_sex_vals=None,
+                 jaywalking_vals=None, driving_under_the_influence_vals=None, debug=False):
+        if option_vals is not None:
+            self.cpd_option_values = option_vals
+        if age_vals is not None:
+            self.cpd_age_values = age_vals
+        if race_vals is not None:
+            self.cpd_race_values = race_vals
+        if legal_sex_vals is not None:
+            self.cpd_legal_sex_values = legal_sex_vals
+        if jaywalking_vals is not None:
+            self.cpd_jaywalking_values = jaywalking_vals
+        if driving_under_the_influence_vals is not None:
+            self.cpd_driving_under_the_influence_values = driving_under_the_influence_vals
 
-    # Age bracket
-    cpd_age = TabularCPD(
-        variable=var_age,
-        variable_card=6,
-        values=[
-            [1 / 6, 1 / 6],
-            [1 / 6, 1 / 6],
-            [1 / 6, 1 / 6],
-            [1 / 6, 1 / 6],
-            [1 / 6, 1 / 6],
-            [1 / 6, 1 / 6]
-        ],
-        evidence=[var_option],
-        evidence_card=[2]
-    )
+        self.model = BayesianModel([
+            (self.var_option, self.var_age),
+            (self.var_option, self.var_race),
+            (self.var_option, self.var_legal_sex),
+            (self.var_option, self.var_jaywalking),
+            (self.var_option, self.var_driving_under_the_influence)
+        ])
 
-    # Race enum
-    cpd_race = TabularCPD(
-        variable=var_race,
-        variable_card=5,
-        values=[
-            [1 / 5, 1 / 5],
-            [1 / 5, 1 / 5],
-            [1 / 5, 1 / 5],
-            [1 / 5, 1 / 5],
-            [1 / 5, 1 / 5]
-        ],
-        evidence=[var_option],
-        evidence_card=[2]
-    )
+        # First or second option
+        cpd_option = TabularCPD(
+            variable=self.var_option,
+            variable_card=2,
+            values=self.cpd_option_values
+        )
 
-    # Legal sex enum
-    cpd_legal_sex = TabularCPD(
-        variable=var_legal_sex,
-        variable_card=2,
-        values=[
-            [0.5, 0.5],
-            [0.5, 0.5]
-        ],
-        evidence=[var_option],
-        evidence_card=[2]
-    )
+        # Age bracket
+        cpd_age = TabularCPD(
+            variable=self.var_age,
+            variable_card=6,
+            values=self.cpd_age_values,
+            evidence=[self.var_option],
+            evidence_card=[2]
+        )
 
-    # Jaywalking boolean, 1 = True
-    cpd_jaywalking = TabularCPD(
-        variable=var_jaywalking,
-        variable_card=2,
-        values=[
-            [0.5, 0.5],
-            [0.5, 0.5]
-        ],
-        evidence=[var_option],
-        evidence_card=[2]
-    )
+        # Race enum
+        cpd_race = TabularCPD(
+            variable=self.var_race,
+            variable_card=5,
+            values=self.cpd_race_values,
+            evidence=[self.var_option],
+            evidence_card=[2]
+        )
 
-    # Driving under the influence boolean, 1 = True
-    cpd_driving_under_the_influence = TabularCPD(
-        variable=var_driving_under_the_influence,
-        variable_card=2,
-        values=[
-            [0.5, 0.5],
-            [0.5, 0.5]
-        ],
-        evidence=[var_option],
-        evidence_card=[2]
-    )
+        # Legal sex enum
+        cpd_legal_sex = TabularCPD(
+            variable=self.var_legal_sex,
+            variable_card=2,
+            values=self.cpd_legal_sex_values,
+            evidence=[self.var_option],
+            evidence_card=[2]
+        )
 
-    # Associating the CPDs with the network
-    model.add_cpds(
-        cpd_option,
-        cpd_age,
-        cpd_race,
-        cpd_legal_sex,
-        cpd_jaywalking,
-        cpd_driving_under_the_influence
-    )
+        # Jaywalking boolean, 1 = True
+        cpd_jaywalking = TabularCPD(
+            variable=self.var_jaywalking,
+            variable_card=2,
+            values=self.cpd_jaywalking_values,
+            evidence=[self.var_option],
+            evidence_card=[2]
+        )
 
-    # Check the network structure and CPDs and verify that the CPDs are correctly defined and sum
-    # to 1
-    model.check_model()
+        # Driving under the influence boolean, 1 = True
+        cpd_driving_under_the_influence = TabularCPD(
+            variable=self.var_driving_under_the_influence,
+            variable_card=2,
+            values=self.cpd_driving_under_the_influence_values,
+            evidence=[self.var_option],
+            evidence_card=[2]
+        )
 
-    print("Option CPD:")
-    print(model.get_cpds(var_option))
+        # Associating the CPDs with the network
+        self.model.add_cpds(
+            cpd_option,
+            cpd_age,
+            cpd_race,
+            cpd_legal_sex,
+            cpd_jaywalking,
+            cpd_driving_under_the_influence
+        )
 
-    print("Age CPD:")
-    print(model.get_cpds(var_age))
+        self.model.check_model()
 
-    print("Race CPD:")
-    print(model.get_cpds(var_race))
+        if debug:
+            print("Option CPD:")
+            print(self.model.get_cpds(self.var_option))
 
-    print("Legal sex CPD:")
-    print(model.get_cpds(var_legal_sex))
+            print("Age CPD:")
+            print(self.model.get_cpds(self.var_age))
 
-    print("Jaywalking CPD:")
-    print(model.get_cpds(var_jaywalking))
+            print("Race CPD:")
+            print(self.model.get_cpds(self.var_race))
 
-    print("Driving under the influence CPD:")
-    print(model.get_cpds(var_driving_under_the_influence))
+            print("Legal sex CPD:")
+            print(self.model.get_cpds(self.var_legal_sex))
 
-    # noinspection PyTypeChecker
-    infer = VariableElimination(model)
+            print("Jaywalking CPD:")
+            print(self.model.get_cpds(self.var_jaywalking))
 
+            print("Driving under the influence CPD:")
+            print(self.model.get_cpds(self.var_driving_under_the_influence))
 
-    def generate_person_list(option_size: int, option: int):
+        # noinspection PyTypeChecker
+        self.infer = VariableElimination(self.model)
+
+    def generate_person_list(self, option_size: int, option: int):
         def infer_values_given_option(variable: str):
-            return infer.query([variable], evidence={var_option: option})[variable].values
+            return self.infer.query(
+                [variable], evidence={self.var_option: option}
+            )[variable].values
 
         def map_infer_to_list(infer):
             return [x.item() for x in infer]
 
         age_states = [10, 20, 30, 40, 50, 60]
-        age_probability = map_infer_to_list(infer_values_given_option(var_age))
+        age_probability = map_infer_to_list(infer_values_given_option(self.var_age))
 
         race_states = [Race.white, Race.black, Race.asian, Race.native_american, Race.other_race]
-        race_probability = map_infer_to_list(infer_values_given_option(var_race))
+        race_probability = map_infer_to_list(infer_values_given_option(self.var_race))
 
         legal_sex_states = [LegalSex.male, LegalSex.female]
-        legal_sex_probability = map_infer_to_list(infer_values_given_option(var_legal_sex))
+        legal_sex_probability = map_infer_to_list(infer_values_given_option(self.var_legal_sex))
 
         jaywalking_states = [False, True]
-        jaywalking_probability = map_infer_to_list(infer_values_given_option(var_jaywalking))
+        jaywalking_probability = map_infer_to_list(infer_values_given_option(self.var_jaywalking))
 
         driving_under_the_influence_states = [False, True]
         driving_under_the_influence_probability = map_infer_to_list(
-            infer_values_given_option(var_driving_under_the_influence)
+            infer_values_given_option(self.var_driving_under_the_influence)
         )
 
         age_choices = choices(age_states, age_probability, k=option_size)
@@ -172,14 +194,13 @@ if __name__ == '__main__':
             driving_under_the_influence=driving_under_the_influence_choices[i]
         ) for i in range(option_size)]
 
-
-    def generate_dilemma(max_num_people: int):
-        option_probability = infer.query(["option"])["option"].values
+    def generate_dilemma(self, max_num_people: int):
+        option_probability = self.infer.query(["option"])["option"].values
         first_option_size = round(max_num_people * option_probability[0].item())
         second_option_size = round(max_num_people * option_probability[1].item())
 
-        first_option = generate_person_list(first_option_size, 0)
-        second_option = generate_person_list(second_option_size, 1)
+        first_option = self.generate_person_list(first_option_size, 0)
+        second_option = self.generate_person_list(second_option_size, 1)
 
         dilemma = Dilemma(first_option, second_option, max_num_people)
 
@@ -188,6 +209,14 @@ if __name__ == '__main__':
         return dilemma, label
 
 
+if __name__ == '__main__':
     max_num_people = 10
     dilemma_count = 100
-    dilemmas = [generate_dilemma(max_num_people) for _ in range(dilemma_count)]
+    generator = DilemmaGenerator(
+        jaywalking_vals=[
+            [1 / 3, 2 / 3],
+            [2 / 3, 1 / 3]
+        ],
+        debug=True
+    )
+    dilemmas = [generator.generate_dilemma(max_num_people) for _ in range(dilemma_count)]
