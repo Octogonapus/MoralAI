@@ -7,16 +7,19 @@ from generate_data_pgmpy import DilemmaGenerator
 from manage_data import TrainMetadata, write_data_to_file, read_data_from_file
 
 if __name__ == '__main__':
-    # write_data_to_file(TrainMetadata(5000, 10), DilemmaGenerator(
-    #     option_vals=[
-    #         [0.3, 0.7]
-    #     ],
-    #     jaywalking_vals=[
-    #         [0, 1],
-    #         [1, 0]
-    #     ]
-    # ), "train_random")
+    write_data_to_file(TrainMetadata(1000, 10), DilemmaGenerator(
+        option_vals=[
+            [0.6, 0.4]
+        ],
+        jaywalking_vals=[
+            [0, 1],
+            [1, 0]
+        ]
+    ), "train_random")
     # write_data_to_file(TrainMetadata(1000, 10), DilemmaGenerator(
+    #     option_vals=[
+    #         [0.4, 0.6]
+    #     ],
     #     jaywalking_vals=[
     #         [1, 0],
     #         [0, 1]

@@ -6,6 +6,23 @@ from pgmpy.inference import VariableElimination
 from model import Dilemma, Person, Race, LegalSex
 
 
+class StatesAndProbs:
+    age_states = [10, 20, 30, 40, 50, 60]
+    race_states = [Race.white, Race.black, Race.asian, Race.native_american,
+                   Race.other_race]
+    legal_sex_states = [LegalSex.male, LegalSex.female]
+    jaywalking_states = [False, True]
+    driving_under_the_influence_states = [False, True]
+
+    def __init__(self, age_probability, race_probability, legal_sex_probability,
+                 jaywalking_probability, driving_under_the_influence_probability):
+        self.age_probability = age_probability
+        self.race_probability = race_probability
+        self.legal_sex_probability = legal_sex_probability
+        self.jaywalking_probability = jaywalking_probability
+        self.driving_under_the_influence_probability = driving_under_the_influence_probability
+
+
 class DilemmaGenerator:
     var_option = "option"
     var_age = "age"
@@ -152,41 +169,52 @@ class DilemmaGenerator:
         # noinspection PyTypeChecker
         self.infer = VariableElimination(self.model)
 
-        self.option_probability = self.infer.query(["option"])["option"].values
+        option_query = self.infer.query(["option"])["option"].values
+        self.option_probability = [option_query[0].item(), option_query[1].item()]
+        self.option_states = [0, 1]
+
+        def generate_option_probabilities(option: int):
+            def infer_values_given_option(variable: str):
+                return self.infer.query(
+                    [variable], evidence={self.var_option: option}
+                )[variable].values
+
+            def map_infer_to_list(infer):
+                return [x.item() for x in infer]
+
+            return StatesAndProbs(
+                age_probability=map_infer_to_list(infer_values_given_option(self.var_age)),
+                race_probability=map_infer_to_list(infer_values_given_option(self.var_race)),
+                legal_sex_probability=map_infer_to_list(infer_values_given_option(
+                    self.var_legal_sex)),
+                jaywalking_probability=map_infer_to_list(
+                    infer_values_given_option(self.var_jaywalking)),
+                driving_under_the_influence_probability=map_infer_to_list(
+                    infer_values_given_option(self.var_driving_under_the_influence)
+                )
+            )
+
+        # Generate all possible probabilities once for this class because inferring is very
+        # expensive
+        self.probs = [generate_option_probabilities(state) for state in self.option_states]
 
     def generate_person_list(self, option_size: int, option: int):
-        def infer_values_given_option(variable: str):
-            return self.infer.query(
-                [variable], evidence={self.var_option: option}
-            )[variable].values
+        age_choices = choices(self.probs[option].age_states, self.probs[option].age_probability,
+                              k=option_size)
 
-        def map_infer_to_list(infer):
-            return [x.item() for x in infer]
+        race_choices = choices(self.probs[option].race_states, self.probs[option].race_probability,
+                               k=option_size)
 
-        age_states = [10, 20, 30, 40, 50, 60]
-        age_probability = map_infer_to_list(infer_values_given_option(self.var_age))
+        legal_sex_choices = choices(self.probs[option].legal_sex_states,
+                                    self.probs[option].legal_sex_probability, k=option_size)
 
-        race_states = [Race.white, Race.black, Race.asian, Race.native_american, Race.other_race]
-        race_probability = map_infer_to_list(infer_values_given_option(self.var_race))
+        jaywalking_choices = choices(self.probs[option].jaywalking_states,
+                                     self.probs[option].jaywalking_probability, k=option_size)
 
-        legal_sex_states = [LegalSex.male, LegalSex.female]
-        legal_sex_probability = map_infer_to_list(infer_values_given_option(self.var_legal_sex))
-
-        jaywalking_states = [False, True]
-        jaywalking_probability = map_infer_to_list(infer_values_given_option(self.var_jaywalking))
-
-        driving_under_the_influence_states = [False, True]
-        driving_under_the_influence_probability = map_infer_to_list(
-            infer_values_given_option(self.var_driving_under_the_influence)
-        )
-
-        age_choices = choices(age_states, age_probability, k=option_size)
-        race_choices = choices(race_states, race_probability, k=option_size)
-        legal_sex_choices = choices(legal_sex_states, legal_sex_probability, k=option_size)
-        jaywalking_choices = choices(jaywalking_states, jaywalking_probability, k=option_size)
-        driving_under_the_influence_choices = choices(driving_under_the_influence_states,
-                                                      driving_under_the_influence_probability,
-                                                      k=option_size)
+        driving_under_the_influence_choices = choices(
+            self.probs[option].driving_under_the_influence_states,
+            self.probs[option].driving_under_the_influence_probability,
+            k=option_size)
 
         return [Person(
             age=age_choices[i],
@@ -197,8 +225,15 @@ class DilemmaGenerator:
         ) for i in range(option_size)]
 
     def generate_dilemma(self, max_num_people: int):
-        first_option_size = round(max_num_people * self.option_probability[0].item())
-        second_option_size = round(max_num_people * self.option_probability[1].item())
+        option_choices = choices(self.option_states, self.option_probability, k=max_num_people)
+
+        first_option_size = 0
+        second_option_size = 0
+        for choice in option_choices:
+            if choice == 0:
+                first_option_size += 1
+            else:
+                second_option_size += 1
 
         first_option = self.generate_person_list(first_option_size, 0)
         second_option = self.generate_person_list(second_option_size, 1)
