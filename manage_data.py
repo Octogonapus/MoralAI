@@ -1,6 +1,8 @@
-import jsonpickle
+import itertools
 
-from generate_data_pgmpy import DilemmaGenerator
+import jsonpickle
+import numpy as np
+
 from generate_training_data import generate_training_data
 
 
@@ -11,34 +13,45 @@ class TrainMetadata:
         self.max_num_people_per_option = max_num_people_per_option
 
 
-def write_data_to_file(metadata: TrainMetadata, generator: DilemmaGenerator, type: str):
-    (data, labels) = generate_training_data(generator,
-                                            metadata.max_num_people_per_option,
-                                            metadata.train_data_size)
+def write_data_to_file(metadata: TrainMetadata, generators, name: str):
+    data_tuples = [
+        generate_training_data(generator,
+                               metadata.max_num_people_per_option,
+                               metadata.train_data_size)
+        for generator in generators
+    ]
 
-    data_file = open(type + "_data", "w")
-    data_file.write(jsonpickle.encode(data))
+    data = []
+    for item in [x[0] for x in data_tuples]:
+        [data.append(x) for x in item]
+
+    labels = []
+    for item in [x[1] for x in data_tuples]:
+        [labels.append(x) for x in item]
+
+    data_file = open(name + "_data", "w")
+    data_file.write(jsonpickle.encode(np.array(data)))
     data_file.close()
 
-    labels_file = open(type + "_labels", "w")
-    labels_file.write(jsonpickle.encode(labels))
+    labels_file = open(name + "_labels", "w")
+    labels_file.write(jsonpickle.encode(np.array(labels)))
     labels_file.close()
 
-    metadata_file = open(type + "_metadata", "w")
+    metadata_file = open(name + "_metadata", "w")
     metadata_file.write(jsonpickle.encode(metadata))
     metadata_file.close()
 
 
-def read_data_from_file(type: str):
-    data_file = open(type + "_data", "r")
+def read_data_from_file(name: str):
+    data_file = open(name + "_data", "r")
     data = jsonpickle.decode(data_file.read())
     data_file.close()
 
-    labels_file = open(type + "_labels", "r")
+    labels_file = open(name + "_labels", "r")
     labels = jsonpickle.decode(labels_file.read())
     labels_file.close()
 
-    metadata_file = open(type + "_metadata", "r")
+    metadata_file = open(name + "_metadata", "r")
     metadata = jsonpickle.decode(metadata_file.read())
     metadata_file.close()
 

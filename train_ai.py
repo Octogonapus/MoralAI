@@ -7,27 +7,43 @@ from generate_data_pgmpy import DilemmaGenerator
 from manage_data import TrainMetadata, write_data_to_file, read_data_from_file
 
 if __name__ == '__main__':
-    write_data_to_file(TrainMetadata(1000, 10), DilemmaGenerator(
-        option_vals=[
-            [0.6, 0.4]
-        ],
-        jaywalking_vals=[
-            [0, 1],
-            [1, 0]
-        ]
-    ), "train_random")
-    # write_data_to_file(TrainMetadata(1000, 10), DilemmaGenerator(
-    #     option_vals=[
-    #         [0.4, 0.6]
-    #     ],
-    #     jaywalking_vals=[
-    #         [1, 0],
-    #         [0, 1]
-    #     ]
-    # ), "test")
+    write_data_to_file(TrainMetadata(50000, 10), [
+        DilemmaGenerator(
+            option_vals=[
+                [0.9, 0.1]
+            ],
+            jaywalking_vals=[
+                [1, 0],
+                [0, 1]
+            ]
+        ),
+        DilemmaGenerator(
+            option_vals=[
+                [0.1, 0.9]
+            ],
+            jaywalking_vals=[
+                [0, 1],
+                [1, 0]
+            ]
+        )
+    ], "train 90-10 100-0 0-100 and 10-90 0-100 100-0")
 
-    (train_data, train_labels, train_metadata) = read_data_from_file("train_random")
-    (test_data, test_labels, test_metadata) = read_data_from_file("test")
+    # write_data_to_file(TrainMetadata(50000, 10), [
+    #     DilemmaGenerator(
+    #         option_vals=[
+    #             [0.4, 0.6]
+    #         ],
+    #         jaywalking_vals=[
+    #             [1, 0],
+    #             [0, 1]
+    #         ]
+    #     )
+    # ], "test option 40-60 jaywalking 100-0 0-100")
+
+    (train_data, train_labels, train_metadata) = read_data_from_file(
+        "train 90-10 100-0 0-100 and 10-90 0-100 100-0")
+    (test_data, test_labels, test_metadata) = read_data_from_file(
+        "test option 40-60 jaywalking 100-0 0-100")
 
     model = Sequential()
 
@@ -50,7 +66,7 @@ if __name__ == '__main__':
                   optimizer='sgd',
                   metrics=[metrics.categorical_accuracy])
 
-    model.fit(train_data, train_labels, epochs=1, batch_size=32)
+    model.fit(train_data, train_labels, epochs=5, batch_size=32)
 
     (loss, accuracy) = model.evaluate(test_data, test_labels, batch_size=32)
     print("Loss:")
