@@ -4,3 +4,4 @@ __pycache__
 *_data
 *_labels
 *_metadata
+.~lock*
