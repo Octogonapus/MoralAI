@@ -10,27 +10,23 @@ if __name__ == '__main__':
     # write_data_to_file(TrainMetadata(50000, 10), [
     #     DilemmaGenerator(
     #         option_vals=[
-    #             [0.8, 0.2]
+    #             [0.85, 0.15]
     #         ],
     #         jaywalking_vals=[
     #             [0.5, 0.5],
     #             [0.5, 0.5]
     #         ]
     #     ),
-    #     # [0.8, 0.2],
-    #     # [0.2, 0.8]
     #     DilemmaGenerator(
     #         option_vals=[
-    #             [0.2, 0.8]
+    #             [0.15, 0.85]
     #         ],
     #         jaywalking_vals=[
     #             [0.5, 0.5],
     #             [0.5, 0.5]
     #         ]
     #     )
-    #     # [0.2, 0.8],
-    #     # [0.8, 0.2]
-    # ], "train 80-20 50-50 50-50 and 20-80 50-50 50-50")
+    # ], "train 85-15 50-50 50-50 and 15-85 50-50 50-50")
 
     # write_data_to_file(TrainMetadata(50000, 10), [
     #     DilemmaGenerator(
@@ -45,7 +41,7 @@ if __name__ == '__main__':
     # ], "test option 40-60 jaywalking 100-0 0-100")
 
     (train_data, train_labels, train_metadata) = read_data_from_file(
-        "train 80-20 50-50 50-50 and 20-80 50-50 50-50")
+        "train 85-15 50-50 50-50 and 15-85 50-50 50-50")
     (test_data, test_labels, test_metadata) = read_data_from_file(
         "test option 40-60 jaywalking 100-0 0-100")
 
