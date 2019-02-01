@@ -10,49 +10,48 @@ if __name__ == '__main__':
     # write_data_to_file(TrainMetadata(50000, 10), [
     #     DilemmaGenerator(
     #         option_vals=[
-    #             [0.85, 0.15]
+    #             [0.8, 0.1, 0.1]
     #         ],
     #         jaywalking_vals=[
-    #             [0.5, 0.5],
-    #             [0.5, 0.5]
+    #             [0.5, 0.5, 0.5],
+    #             [0.5, 0.5, 0.5]
     #         ]
     #     ),
     #     DilemmaGenerator(
     #         option_vals=[
-    #             [0.15, 0.85]
+    #             [0.1, 0.1, 0.8]
     #         ],
     #         jaywalking_vals=[
-    #             [0.5, 0.5],
-    #             [0.5, 0.5]
+    #             [0.5, 0.5, 0.5],
+    #             [0.5, 0.5, 0.5]
     #         ]
     #     )
-    # ], "train 85-15 50-50 50-50 and 15-85 50-50 50-50")
+    # ], "train 80-10-10 50-50 50-50 50-50 and 10-10-80 50-50 50-50 50-50")
 
     # write_data_to_file(TrainMetadata(50000, 10), [
     #     DilemmaGenerator(
     #         option_vals=[
-    #             [0.4, 0.6]
+    #             [0.4, 0.3, 0.3]
     #         ],
     #         jaywalking_vals=[
-    #             [1, 0],
-    #             [0, 1]
+    #             [0, 1, 1],
+    #             [1, 0, 0]
     #         ]
     #     )
-    # ], "test option 40-60 jaywalking 100-0 0-100")
+    # ], "test 40-30-30 0-100 100-0 100-0")
 
     (train_data, train_labels, train_metadata) = read_data_from_file(
-        "train 85-15 50-50 50-50 and 15-85 50-50 50-50")
+        "train 80-10-10 50-50 50-50 50-50 and 10-10-80 50-50 50-50 50-50")
     (test_data, test_labels, test_metadata) = read_data_from_file(
-        "test option 40-60 jaywalking 100-0 0-100")
+        "test 40-30-30 0-100 100-0 100-0")
 
     model = Sequential()
 
-    input_dim = 44 * train_metadata.max_num_people_per_option
-    output_dim = 2
+    # 22 elements per option, 3 options, each option padded to max number of people
+    output_dim = 3
+    input_dim = 22 * output_dim * train_metadata.max_num_people_per_option
 
-    # Input layer dimension is 44 * max_num_people_per_option because each option is 22 elements
-    # and there are two options, and each option is padded to the max number of people.
-    model.add(Dense(units=44 * train_metadata.max_num_people_per_option, activation='relu',
+    model.add(Dense(units=input_dim, activation='relu',
                     input_dim=input_dim))
 
     model.add(Dense(units=round((input_dim + output_dim) / 2), activation='relu'))

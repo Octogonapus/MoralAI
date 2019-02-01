@@ -1,7 +1,5 @@
 import numpy as np
 
-from generate_data_pgmpy import DilemmaGenerator
-
 
 def generate_modeled_dilemmas(generator, max_num_people: int, num_dilemmas: int):
     dilemmas = [generator.generate_dilemma(max_num_people) for _ in range(num_dilemmas)]
