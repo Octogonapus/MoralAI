@@ -101,9 +101,11 @@ class Person:
 
 
 class Dilemma:
-    def __init__(self, first_option: List[Person], second_option: List[Person], max_size: int):
+    def __init__(self, first_option: List[Person], second_option: List[Person],
+                 third_option: List[Person], max_size: int):
         self.first_option = first_option
         self.second_option = second_option
+        self.third_option = third_option
         self.max_size = max_size
 
     def export_option(self, option: List[Person]):
@@ -117,7 +119,8 @@ class Dilemma:
     def export_raw(self):
         return [
             *self.export_option(self.first_option),
-            *self.export_option(self.second_option)
+            *self.export_option(self.second_option),
+            *self.export_option(self.third_option)
         ]
 
     def export(self):
@@ -164,11 +167,16 @@ class TestPersonExport(unittest.TestCase):
 class TestDilemmaExport(unittest.TestCase):
 
     def testExportWithEmptyDilemma(self):
-        dilemma = Dilemma([], [], 1)
+        dilemma = Dilemma([], [], [], 1)
 
         self.assertEqual(
             dilemma.export_raw(),
             [
+                0, 0, 0, 0, 0, 0, 0,
+                0, 0, 0, 0, 0, 0,
+                0, 0, 0,
+                0, 0, 0,
+                0, 0, 0,
                 0, 0, 0, 0, 0, 0, 0,
                 0, 0, 0, 0, 0, 0,
                 0, 0, 0,
@@ -183,11 +191,21 @@ class TestDilemmaExport(unittest.TestCase):
         )
 
     def testExportWithEmptyDilemmaWithMaxSize2(self):
-        dilemma = Dilemma([], [], 2)
+        dilemma = Dilemma([], [], [], 2)
 
         self.assertEqual(
             dilemma.export_raw(),
             [
+                0, 0, 0, 0, 0, 0, 0,
+                0, 0, 0, 0, 0, 0,
+                0, 0, 0,
+                0, 0, 0,
+                0, 0, 0,
+                0, 0, 0, 0, 0, 0, 0,
+                0, 0, 0, 0, 0, 0,
+                0, 0, 0,
+                0, 0, 0,
+                0, 0, 0,
                 0, 0, 0, 0, 0, 0, 0,
                 0, 0, 0, 0, 0, 0,
                 0, 0, 0,
@@ -212,12 +230,17 @@ class TestDilemmaExport(unittest.TestCase):
         )
 
     def testExportWithDilemmaOfTwoEmptyPeople(self):
-        dilemma = Dilemma([Person()], [Person()], 1)
+        dilemma = Dilemma([Person()], [Person()], [Person()], 1)
 
         raw = dilemma.export_raw()
         self.assertEqual(
             raw,
             [
+                1, 0, 0, 0, 0, 0, 0,
+                1, 0, 0, 0, 0, 0,
+                1, 0, 0,
+                1, 0, 0,
+                1, 0, 0,
                 1, 0, 0, 0, 0, 0, 0,
                 1, 0, 0, 0, 0, 0,
                 1, 0, 0,
@@ -232,12 +255,22 @@ class TestDilemmaExport(unittest.TestCase):
         )
 
     def testExportWithDilemmaOfTwoEmptyPeopleWithMaxSize2(self):
-        dilemma = Dilemma([Person()], [Person()], 2)
+        dilemma = Dilemma([Person()], [Person()], [Person()], 2)
 
         raw = dilemma.export_raw()
         self.assertEqual(
             raw,
             [
+                1, 0, 0, 0, 0, 0, 0,
+                1, 0, 0, 0, 0, 0,
+                1, 0, 0,
+                1, 0, 0,
+                1, 0, 0,
+                0, 0, 0, 0, 0, 0, 0,
+                0, 0, 0, 0, 0, 0,
+                0, 0, 0,
+                0, 0, 0,
+                0, 0, 0,
                 1, 0, 0, 0, 0, 0, 0,
                 1, 0, 0, 0, 0, 0,
                 1, 0, 0,

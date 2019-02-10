@@ -31,33 +31,33 @@ class DilemmaGenerator:
     var_jaywalking = "jaywalking"
     var_driving_under_the_influence = "driving_under_the_influence"
 
-    cpd_option_values = [[0.5, 0.5]]
+    cpd_option_values = [[1 / 3, 1 / 3, 1 / 3]]
     cpd_age_values = [
-        [1 / 6, 1 / 6],
-        [1 / 6, 1 / 6],
-        [1 / 6, 1 / 6],
-        [1 / 6, 1 / 6],
-        [1 / 6, 1 / 6],
-        [1 / 6, 1 / 6]
+        [1 / 6, 1 / 6, 1 / 6],
+        [1 / 6, 1 / 6, 1 / 6],
+        [1 / 6, 1 / 6, 1 / 6],
+        [1 / 6, 1 / 6, 1 / 6],
+        [1 / 6, 1 / 6, 1 / 6],
+        [1 / 6, 1 / 6, 1 / 6]
     ]
     cpd_race_values = [
-        [1 / 5, 1 / 5],
-        [1 / 5, 1 / 5],
-        [1 / 5, 1 / 5],
-        [1 / 5, 1 / 5],
-        [1 / 5, 1 / 5]
+        [1 / 5, 1 / 5, 1 / 5],
+        [1 / 5, 1 / 5, 1 / 5],
+        [1 / 5, 1 / 5, 1 / 5],
+        [1 / 5, 1 / 5, 1 / 5],
+        [1 / 5, 1 / 5, 1 / 5]
     ]
     cpd_legal_sex_values = [
-        [0.5, 0.5],
-        [0.5, 0.5]
+        [0.5, 0.5, 0.5],
+        [0.5, 0.5, 0.5]
     ]
     cpd_jaywalking_values = [
-        [0.5, 0.5],
-        [0.5, 0.5]
+        [0.5, 0.5, 0.5],
+        [0.5, 0.5, 0.5]
     ]
     cpd_driving_under_the_influence_values = [
-        [0.5, 0.5],
-        [0.5, 0.5]
+        [0.5, 0.5, 0.5],
+        [0.5, 0.5, 0.5]
     ]
 
     def __init__(self, option_vals=None, age_vals=None, race_vals=None, legal_sex_vals=None,
@@ -86,7 +86,7 @@ class DilemmaGenerator:
         # First or second option
         cpd_option = TabularCPD(
             variable=self.var_option,
-            variable_card=2,
+            variable_card=3,
             values=self.cpd_option_values
         )
 
@@ -96,7 +96,7 @@ class DilemmaGenerator:
             variable_card=6,
             values=self.cpd_age_values,
             evidence=[self.var_option],
-            evidence_card=[2]
+            evidence_card=[3]
         )
 
         # Race enum
@@ -105,7 +105,7 @@ class DilemmaGenerator:
             variable_card=5,
             values=self.cpd_race_values,
             evidence=[self.var_option],
-            evidence_card=[2]
+            evidence_card=[3]
         )
 
         # Legal sex enum
@@ -114,7 +114,7 @@ class DilemmaGenerator:
             variable_card=2,
             values=self.cpd_legal_sex_values,
             evidence=[self.var_option],
-            evidence_card=[2]
+            evidence_card=[3]
         )
 
         # Jaywalking boolean, 1 = True
@@ -123,7 +123,7 @@ class DilemmaGenerator:
             variable_card=2,
             values=self.cpd_jaywalking_values,
             evidence=[self.var_option],
-            evidence_card=[2]
+            evidence_card=[3]
         )
 
         # Driving under the influence boolean, 1 = True
@@ -132,7 +132,7 @@ class DilemmaGenerator:
             variable_card=2,
             values=self.cpd_driving_under_the_influence_values,
             evidence=[self.var_option],
-            evidence_card=[2]
+            evidence_card=[3]
         )
 
         # Associating the CPDs with the network
@@ -170,8 +170,9 @@ class DilemmaGenerator:
         self.infer = VariableElimination(self.model)
 
         option_query = self.infer.query(["option"])["option"].values
-        self.option_probability = [option_query[0].item(), option_query[1].item()]
-        self.option_states = [0, 1]
+        self.option_probability = [option_query[0].item(), option_query[1].item(),
+                                   option_query[2].item()]
+        self.option_states = [0, 1, 2]
 
         def generate_option_probabilities(option: int):
             def infer_values_given_option(variable: str):
@@ -229,17 +230,26 @@ class DilemmaGenerator:
 
         first_option_size = 0
         second_option_size = 0
+        third_option_size = 0
         for choice in option_choices:
             if choice == 0:
                 first_option_size += 1
-            else:
+            elif choice == 1:
                 second_option_size += 1
+            elif choice == 2:
+                third_option_size += 1
 
         first_option = self.generate_person_list(first_option_size, 0)
         second_option = self.generate_person_list(second_option_size, 1)
+        third_option = self.generate_person_list(third_option_size, 2)
 
-        dilemma = Dilemma(first_option, second_option, max_num_people)
+        dilemma = Dilemma(first_option, second_option, third_option, max_num_people)
 
-        label = [1, 0] if first_option_size >= second_option_size else [0, 1]
+        if second_option_size > first_option_size and second_option_size > third_option_size:
+            label = [0, 1, 0]
+        elif third_option_size > first_option_size and third_option_size > second_option_size:
+            label = [0, 0, 1]
+        else:
+            label = [1, 0, 0]
 
         return dilemma, label
