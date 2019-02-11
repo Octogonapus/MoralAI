@@ -65,7 +65,7 @@ if __name__ == '__main__':
         ]
     )
 
-    gen.generate_dilemma(10)
+    thing = gen.generate_dilemma(10)
     print("")
 
     # contours = plt.contour(X, Y, Z)

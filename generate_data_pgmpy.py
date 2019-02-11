@@ -235,28 +235,20 @@ class DilemmaGenerator:
     def generate_dilemma(self, max_num_people: int):
         option_choices = choices(self.option_states, self.option_probability, k=max_num_people)
 
-        first_option_size = 0
-        second_option_size = 0
-        third_option_size = 0
+        # Count the number of people we want in each option and build a list where the number of
+        # people in an option corresponds to the index of that option.
+        option_sizes = [0] * self.option_card
         for choice in option_choices:
-            if choice == 0:
-                first_option_size += 1
-            elif choice == 1:
-                second_option_size += 1
-            elif choice == 2:
-                third_option_size += 1
+            option_sizes[choice] = option_sizes[choice] + 1
 
-        first_option = self.generate_person_list(first_option_size, 0)
-        second_option = self.generate_person_list(second_option_size, 1)
-        third_option = self.generate_person_list(third_option_size, 2)
+        # Generate a list of people for each option.
+        option_people = [self.generate_person_list(option_sizes[i], i) for i in
+                         range(len(option_sizes))]
 
-        dilemma = Dilemma(first_option, second_option, third_option, max_num_people)
+        dilemma = Dilemma(option_people, max_num_people)
 
-        if second_option_size > first_option_size and second_option_size > third_option_size:
-            label = [0, 1, 0]
-        elif third_option_size > first_option_size and third_option_size > second_option_size:
-            label = [0, 0, 1]
-        else:
-            label = [1, 0, 0]
+        # Label the leftmost maximum size option as correct.
+        label = [0] * len(option_sizes)
+        label[option_sizes.index(max(option_sizes))] = 1
 
         return dilemma, label

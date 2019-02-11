@@ -101,11 +101,8 @@ class Person:
 
 
 class Dilemma:
-    def __init__(self, first_option: List[Person], second_option: List[Person],
-                 third_option: List[Person], max_size: int):
-        self.first_option = first_option
-        self.second_option = second_option
-        self.third_option = third_option
+    def __init__(self, options: List[List[Person]], max_size: int):
+        self.options = options
         self.max_size = max_size
 
     def export_option(self, option: List[Person]):
@@ -117,11 +114,7 @@ class Dilemma:
         ]
 
     def export_raw(self):
-        return [
-            *self.export_option(self.first_option),
-            *self.export_option(self.second_option),
-            *self.export_option(self.third_option)
-        ]
+        return [i for j in self.options for i in self.export_option(j)]
 
     def export(self):
         return np.array(self.export_raw())
