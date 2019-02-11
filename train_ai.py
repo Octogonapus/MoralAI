@@ -41,8 +41,8 @@ def generate_training_data_in_memory(metadata: TrainMetadata, generators):
     return data, labels, metadata
 
 
-def train_and_test_once(filename, train_data, train_labels, train_metadata, test_data, test_labels,
-                        test_metadata):
+def train_and_test_iteration(filename, train_data, train_labels, train_metadata, test_data,
+                             test_labels, test_metadata):
     model = Sequential()
 
     # 22 elements per option, 3 options, each option padded to max number of people
@@ -80,12 +80,7 @@ def train_and_test_once(filename, train_data, train_labels, train_metadata, test
         f.write("%s,%s\n" % (loss, accuracy))
 
 
-if __name__ == '__main__':
-    test_data_filename = "test option 40-60 jaywalking 100-0 0-100"
-    results_filename = "dense results against " + test_data_filename
-
-    test_data, test_labels, test_metadata = read_data_from_file(test_data_filename)
-
+def train_and_test(filename, test_data, test_labels, test_metadata):
     jaywalking_cpd = [1, 0]
 
     generators = [
@@ -112,5 +107,18 @@ if __name__ == '__main__':
     train_data, train_labels, train_metadata = generate_training_data_in_memory(
         TrainMetadata(50, 10), generators)
 
-    train_and_test_once(results_filename, train_data, train_labels, train_metadata, test_data,
-                        test_labels, test_metadata)
+    with open(filename, "a") as f:
+        f.write("jaywalking: %s\n" % jaywalking_cpd)
+
+    for _ in range(5):
+        train_and_test_iteration(results_filename, train_data, train_labels, train_metadata,
+                                 test_data, test_labels, test_metadata)
+
+
+if __name__ == '__main__':
+    test_data_filename = "test option 40-60 jaywalking 100-0 0-100"
+    results_filename = "dense results against " + test_data_filename
+
+    test_data, test_labels, test_metadata = read_data_from_file(test_data_filename)
+
+    train_and_test(results_filename, test_data, test_labels, test_metadata)
