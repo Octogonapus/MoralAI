@@ -23,6 +23,13 @@ class StatesAndProbs:
         self.driving_under_the_influence_probability = driving_under_the_influence_probability
 
 
+def generate_cpd(variable_cardinality, evidence_cardinality):
+    cpd = []
+    for i in range(variable_cardinality):
+        cpd.append([1.0 / variable_cardinality] * evidence_cardinality)
+    return cpd
+
+
 class DilemmaGenerator:
     var_option = "option"
     var_age = "age"
@@ -31,49 +38,45 @@ class DilemmaGenerator:
     var_jaywalking = "jaywalking"
     var_driving_under_the_influence = "driving_under_the_influence"
 
-    cpd_option_values = [[1 / 3, 1 / 3, 1 / 3]]
-    cpd_age_values = [
-        [1 / 6, 1 / 6, 1 / 6],
-        [1 / 6, 1 / 6, 1 / 6],
-        [1 / 6, 1 / 6, 1 / 6],
-        [1 / 6, 1 / 6, 1 / 6],
-        [1 / 6, 1 / 6, 1 / 6],
-        [1 / 6, 1 / 6, 1 / 6]
-    ]
-    cpd_race_values = [
-        [1 / 5, 1 / 5, 1 / 5],
-        [1 / 5, 1 / 5, 1 / 5],
-        [1 / 5, 1 / 5, 1 / 5],
-        [1 / 5, 1 / 5, 1 / 5],
-        [1 / 5, 1 / 5, 1 / 5]
-    ]
-    cpd_legal_sex_values = [
-        [0.5, 0.5, 0.5],
-        [0.5, 0.5, 0.5]
-    ]
-    cpd_jaywalking_values = [
-        [0.5, 0.5, 0.5],
-        [0.5, 0.5, 0.5]
-    ]
-    cpd_driving_under_the_influence_values = [
-        [0.5, 0.5, 0.5],
-        [0.5, 0.5, 0.5]
-    ]
+    age_card = 6
+    race_card = 5
+    legal_sex_card = 2
+    jaywalking_card = 2
+    driving_under_the_influence_card = 2
 
-    def __init__(self, option_vals=None, age_vals=None, race_vals=None, legal_sex_vals=None,
+    def __init__(self, option_vals, age_vals=None, race_vals=None, legal_sex_vals=None,
                  jaywalking_vals=None, driving_under_the_influence_vals=None, debug=False):
-        if option_vals is not None:
-            self.cpd_option_values = option_vals
+        self.option_card = len(option_vals[0])
+        self.cpd_option_values = option_vals
+
+        # Parse all the input CPDs. If the user specifies one, keep it. If not, generate it as a
+        # uniform distribution.
+
         if age_vals is not None:
             self.cpd_age_values = age_vals
+        else:
+            self.cpd_age_values = generate_cpd(self.age_card, self.option_card)
+
         if race_vals is not None:
             self.cpd_race_values = race_vals
+        else:
+            self.cpd_race_values = generate_cpd(self.race_card, self.option_card)
+
         if legal_sex_vals is not None:
             self.cpd_legal_sex_values = legal_sex_vals
+        else:
+            self.cpd_legal_sex_values = generate_cpd(self.legal_sex_card, self.option_card)
+
         if jaywalking_vals is not None:
             self.cpd_jaywalking_values = jaywalking_vals
+        else:
+            self.cpd_jaywalking_values = generate_cpd(self.jaywalking_card, self.option_card)
+
         if driving_under_the_influence_vals is not None:
             self.cpd_driving_under_the_influence_values = driving_under_the_influence_vals
+        else:
+            self.cpd_driving_under_the_influence_values = generate_cpd(
+                self.driving_under_the_influence_card, self.option_card)
 
         self.model = BayesianModel([
             (self.var_option, self.var_age),
@@ -86,53 +89,53 @@ class DilemmaGenerator:
         # First or second option
         cpd_option = TabularCPD(
             variable=self.var_option,
-            variable_card=3,
+            variable_card=self.option_card,
             values=self.cpd_option_values
         )
 
         # Age bracket
         cpd_age = TabularCPD(
             variable=self.var_age,
-            variable_card=6,
+            variable_card=self.age_card,
             values=self.cpd_age_values,
             evidence=[self.var_option],
-            evidence_card=[3]
+            evidence_card=[self.option_card]
         )
 
         # Race enum
         cpd_race = TabularCPD(
             variable=self.var_race,
-            variable_card=5,
+            variable_card=self.race_card,
             values=self.cpd_race_values,
             evidence=[self.var_option],
-            evidence_card=[3]
+            evidence_card=[self.option_card]
         )
 
         # Legal sex enum
         cpd_legal_sex = TabularCPD(
             variable=self.var_legal_sex,
-            variable_card=2,
+            variable_card=self.legal_sex_card,
             values=self.cpd_legal_sex_values,
             evidence=[self.var_option],
-            evidence_card=[3]
+            evidence_card=[self.option_card]
         )
 
         # Jaywalking boolean, 1 = True
         cpd_jaywalking = TabularCPD(
             variable=self.var_jaywalking,
-            variable_card=2,
+            variable_card=self.jaywalking_card,
             values=self.cpd_jaywalking_values,
             evidence=[self.var_option],
-            evidence_card=[3]
+            evidence_card=[self.option_card]
         )
 
         # Driving under the influence boolean, 1 = True
         cpd_driving_under_the_influence = TabularCPD(
             variable=self.var_driving_under_the_influence,
-            variable_card=2,
+            variable_card=self.driving_under_the_influence_card,
             values=self.cpd_driving_under_the_influence_values,
             evidence=[self.var_option],
-            evidence_card=[3]
+            evidence_card=[self.option_card]
         )
 
         # Associating the CPDs with the network

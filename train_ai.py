@@ -44,27 +44,40 @@ if __name__ == '__main__':
     #     )
     # ], "test 40-30-30 0-100 100-0 100-0")
 
-    x = np.array([100, 80, 50])
-    y = np.array([90, 85, 80])
-    X, Y = np.meshgrid(x, y)
-    Z = np.array(
-        [
-            [.74124, .8818, .99996],
-            [.99992, .99998, 1],
-            [1, 1, 1]
+    # x = np.array([100, 80, 50])
+    # y = np.array([90, 85, 80])
+    # X, Y = np.meshgrid(x, y)
+    # Z = np.array(
+    #     [
+    #         [.74124, .8818, .99996],
+    #         [.99992, .99998, 1],
+    #         [1, 1, 1]
+    #     ]
+    # )
+
+    gen = DilemmaGenerator(
+        option_vals=[
+            [0.8, 0.1, 0.1]
+        ],
+        jaywalking_vals=[
+            [0.5, 0.5, 0.5],
+            [0.5, 0.5, 0.5]
         ]
     )
+
+    gen.generate_dilemma(10)
+    print("")
 
     # contours = plt.contour(X, Y, Z)
     # plt.clabel(contours, inline=True, inline_spacing=5)
     # plt.colorbar()
 
-    fig = plt.figure()
-    ax = fig.gca(projection='3d')
-    ax.plot_surface(X, Y, Z, cmap=cm.coolwarm)
-    ax.view_init(30, 30)
+    # fig = plt.figure()
+    # ax = fig.gca(projection='3d')
+    # ax.plot_surface(X, Y, Z, cmap=cm.coolwarm)
+    # ax.view_init(30, 30)
 
-    plt.show()
+    # plt.show()
 
     # (train_data, train_labels, train_metadata) = read_data_from_file(
     #     "train 80-10-10 50-50 50-50 50-50 and 10-10-80 50-50 50-50 50-50")
