@@ -173,9 +173,8 @@ class DilemmaGenerator:
         self.infer = VariableElimination(self.model)
 
         option_query = self.infer.query(["option"])["option"].values
-        self.option_probability = [option_query[0].item(), option_query[1].item(),
-                                   option_query[2].item()]
-        self.option_states = [0, 1, 2]
+        self.option_probability = [option_query[i] for i in range(self.option_card)]
+        self.option_states = [i for i in range(self.option_card)]
 
         def generate_option_probabilities(option: int):
             def infer_values_given_option(variable: str):
@@ -200,24 +199,29 @@ class DilemmaGenerator:
 
         # Generate all possible probabilities once for this class because inferring is very
         # expensive
-        self.probs = [generate_option_probabilities(state) for state in self.option_states]
+        self.all_probabilities = [generate_option_probabilities(state) for state in
+                                  self.option_states]
 
     def generate_person_list(self, option_size: int, option: int):
-        age_choices = choices(self.probs[option].age_states, self.probs[option].age_probability,
+        age_choices = choices(self.all_probabilities[option].age_states,
+                              self.all_probabilities[option].age_probability,
                               k=option_size)
 
-        race_choices = choices(self.probs[option].race_states, self.probs[option].race_probability,
+        race_choices = choices(self.all_probabilities[option].race_states,
+                               self.all_probabilities[option].race_probability,
                                k=option_size)
 
-        legal_sex_choices = choices(self.probs[option].legal_sex_states,
-                                    self.probs[option].legal_sex_probability, k=option_size)
+        legal_sex_choices = choices(self.all_probabilities[option].legal_sex_states,
+                                    self.all_probabilities[option].legal_sex_probability,
+                                    k=option_size)
 
-        jaywalking_choices = choices(self.probs[option].jaywalking_states,
-                                     self.probs[option].jaywalking_probability, k=option_size)
+        jaywalking_choices = choices(self.all_probabilities[option].jaywalking_states,
+                                     self.all_probabilities[option].jaywalking_probability,
+                                     k=option_size)
 
         driving_under_the_influence_choices = choices(
-            self.probs[option].driving_under_the_influence_states,
-            self.probs[option].driving_under_the_influence_probability,
+            self.all_probabilities[option].driving_under_the_influence_states,
+            self.all_probabilities[option].driving_under_the_influence_probability,
             k=option_size)
 
         return [Person(
