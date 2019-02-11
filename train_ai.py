@@ -80,13 +80,11 @@ def train_and_test_iteration(filename, train_data, train_labels, train_metadata,
         f.write("%s,%s\n" % (loss, accuracy))
 
 
-def train_and_test(filename, test_data, test_labels, test_metadata):
-    jaywalking_cpd = [1, 0]
-
+def train_and_test(filename, option_cpd, jaywalking_cpd, test_data, test_labels, test_metadata):
     generators = [
         DilemmaGenerator(
             option_vals=[
-                [0.6, 0.4]
+                [option_cpd[0], option_cpd[1]]
             ],
             jaywalking_vals=[
                 [jaywalking_cpd[0], jaywalking_cpd[1]],
@@ -95,7 +93,7 @@ def train_and_test(filename, test_data, test_labels, test_metadata):
         ),
         DilemmaGenerator(
             option_vals=[
-                [0.4, 0.6]
+                [option_cpd[1], option_cpd[0]]
             ],
             jaywalking_vals=[
                 [jaywalking_cpd[1], jaywalking_cpd[0]],
@@ -105,20 +103,26 @@ def train_and_test(filename, test_data, test_labels, test_metadata):
     ]
 
     train_data, train_labels, train_metadata = generate_training_data_in_memory(
-        TrainMetadata(50, 10), generators)
+        TrainMetadata(50000, 10), generators)
 
     with open(filename, "a") as f:
-        f.write("jaywalking: %s\n" % jaywalking_cpd)
+        f.write("%s,%s,%s,%s\n" % (option_cpd[0], option_cpd[1], jaywalking_cpd[0],
+                                   jaywalking_cpd[1]))
 
     for _ in range(5):
-        train_and_test_iteration(results_filename, train_data, train_labels, train_metadata,
+        train_and_test_iteration(filename, train_data, train_labels, train_metadata,
                                  test_data, test_labels, test_metadata)
 
 
 if __name__ == '__main__':
     test_data_filename = "test option 40-60 jaywalking 100-0 0-100"
-    results_filename = "dense results against " + test_data_filename
+    results_filename = "dense results for " + test_data_filename
 
     test_data, test_labels, test_metadata = read_data_from_file(test_data_filename)
 
-    train_and_test(results_filename, test_data, test_labels, test_metadata)
+    for first_option_probability in np.linspace(0, 1, 10):
+        option_cpd = [first_option_probability, 1 - first_option_probability]
+        for jaywalking_probability in np.linspace(0, 1, 10):
+            jaywalking_cpd = [jaywalking_probability, 1 - jaywalking_probability]
+            train_and_test(results_filename, option_cpd, jaywalking_cpd, test_data, test_labels,
+                           test_metadata)
