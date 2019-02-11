@@ -160,10 +160,9 @@ class TestPersonExport(unittest.TestCase):
 class TestDilemmaExport(unittest.TestCase):
 
     def testExportWithEmptyDilemma(self):
-        dilemma = Dilemma([], [], [], 1)
+        dilemma = Dilemma([[], [], []], 1)
 
         self.assertEqual(
-            dilemma.export_raw(),
             [
                 0, 0, 0, 0, 0, 0, 0,
                 0, 0, 0, 0, 0, 0,
@@ -180,14 +179,14 @@ class TestDilemmaExport(unittest.TestCase):
                 0, 0, 0,
                 0, 0, 0,
                 0, 0, 0
-            ]
+            ],
+            dilemma.export_raw()
         )
 
     def testExportWithEmptyDilemmaWithMaxSize2(self):
-        dilemma = Dilemma([], [], [], 2)
+        dilemma = Dilemma([[], [], []], 2)
 
         self.assertEqual(
-            dilemma.export_raw(),
             [
                 0, 0, 0, 0, 0, 0, 0,
                 0, 0, 0, 0, 0, 0,
@@ -219,15 +218,15 @@ class TestDilemmaExport(unittest.TestCase):
                 0, 0, 0,
                 0, 0, 0,
                 0, 0, 0
-            ]
+            ],
+            dilemma.export_raw()
         )
 
     def testExportWithDilemmaOfTwoEmptyPeople(self):
-        dilemma = Dilemma([Person()], [Person()], [Person()], 1)
+        dilemma = Dilemma([[Person()], [Person()], [Person()]], 1)
 
         raw = dilemma.export_raw()
         self.assertEqual(
-            raw,
             [
                 1, 0, 0, 0, 0, 0, 0,
                 1, 0, 0, 0, 0, 0,
@@ -244,15 +243,15 @@ class TestDilemmaExport(unittest.TestCase):
                 1, 0, 0,
                 1, 0, 0,
                 1, 0, 0
-            ]
+            ],
+            raw
         )
 
     def testExportWithDilemmaOfTwoEmptyPeopleWithMaxSize2(self):
-        dilemma = Dilemma([Person()], [Person()], [Person()], 2)
+        dilemma = Dilemma([[Person()], [Person()], [Person()]], 2)
 
         raw = dilemma.export_raw()
         self.assertEqual(
-            raw,
             [
                 1, 0, 0, 0, 0, 0, 0,
                 1, 0, 0, 0, 0, 0,
@@ -284,7 +283,8 @@ class TestDilemmaExport(unittest.TestCase):
                 0, 0, 0,
                 0, 0, 0,
                 0, 0, 0
-            ]
+            ],
+            raw
         )
 
 
