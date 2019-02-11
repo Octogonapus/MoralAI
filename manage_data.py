@@ -1,5 +1,3 @@
-import itertools
-
 import jsonpickle
 import numpy as np
 
@@ -13,7 +11,7 @@ class TrainMetadata:
         self.max_num_people_per_option = max_num_people_per_option
 
 
-def write_data_to_file(metadata: TrainMetadata, generators, name: str):
+def preprocess_data_before_saving(metadata: TrainMetadata, generators):
     data_tuples = [
         generate_training_data(generator,
                                metadata.max_num_people_per_option,
@@ -29,12 +27,18 @@ def write_data_to_file(metadata: TrainMetadata, generators, name: str):
     for item in [x[1] for x in data_tuples]:
         [labels.append(x) for x in item]
 
+    return np.array(data), np.array(labels)
+
+
+def write_data_to_file(metadata: TrainMetadata, generators, name: str):
+    data, labels = preprocess_data_before_saving(metadata, generators)
+
     data_file = open(name + "_data", "w")
-    data_file.write(jsonpickle.encode(np.array(data)))
+    data_file.write(jsonpickle.encode(data))
     data_file.close()
 
     labels_file = open(name + "_labels", "w")
-    labels_file.write(jsonpickle.encode(np.array(labels)))
+    labels_file.write(jsonpickle.encode(labels))
     labels_file.close()
 
     metadata_file = open(name + "_metadata", "w")
