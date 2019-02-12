@@ -10,4 +10,3 @@
 \contentsline {chapter}{\numberline {4}Findings and Analysis}{12}{chapter.4}
 \contentsline {chapter}{\numberline {5}Conclusion}{13}{chapter.5}
 \contentsline {chapter}{\numberline {A}Figures}{15}{appendix.A}
-\contentsline {chapter}{\numberline {B}Tables}{18}{appendix.B}
