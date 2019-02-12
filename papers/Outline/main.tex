@@ -1,0 +1,324 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{hyperref}
+\usepackage{amsmath}
+\usepackage{bera}
+\usepackage{listings}
+\usepackage{xcolor}
+
+\usepackage[
+backend=biber,
+style=alphabetic,
+sorting=ynt
+]{biblatex}
+\addbibresource{citations.bib}
+
+% Default fixed font does not support bold face
+\DeclareFixedFont{\ttb}{T1}{txtt}{bx}{n}{12} % for bold
+\DeclareFixedFont{\ttm}{T1}{txtt}{m}{n}{12}  % for normal
+
+\colorlet{punct}{red!60!black}
+\definecolor{background}{HTML}{EEEEEE}
+\definecolor{delim}{RGB}{20,105,176}
+\colorlet{numb}{magenta!60!black}
+
+\lstdefinelanguage{json}{
+    basicstyle=\normalfont\ttfamily,
+    numbers=left,
+    numberstyle=\scriptsize,
+    stepnumber=1,
+    numbersep=8pt,
+    showstringspaces=false,
+    breaklines=true,
+    frame=lines,
+    backgroundcolor=\color{background},
+    literate=
+     *{0}{{{\color{numb}0}}}{1}
+      {1}{{{\color{numb}1}}}{1}
+      {2}{{{\color{numb}2}}}{1}
+      {3}{{{\color{numb}3}}}{1}
+      {4}{{{\color{numb}4}}}{1}
+      {5}{{{\color{numb}5}}}{1}
+      {6}{{{\color{numb}6}}}{1}
+      {7}{{{\color{numb}7}}}{1}
+      {8}{{{\color{numb}8}}}{1}
+      {9}{{{\color{numb}9}}}{1}
+      {:}{{{\color{punct}{:}}}}{1}
+      {,}{{{\color{punct}{,}}}}{1}
+      {\{}{{{\color{delim}{\{}}}}{1}
+      {\}}{{{\color{delim}{\}}}}}{1}
+      {[}{{{\color{delim}{[}}}}{1}
+      {]}{{{\color{delim}{]}}}}{1},
+}
+
+% Python style for highlighting
+\newcommand\pythonstyle{\lstset{
+language=Python,
+basicstyle=\ttm,
+otherkeywords={self},             % Add keywords here
+keywordstyle=\ttb\color{deepblue},
+emph={MyClass,__init__},          % Custom highlighting
+emphstyle=\ttb\color{deepred},    % Custom highlighting style
+stringstyle=\color{deepgreen},
+frame=tb,                         % Any extra options here
+showstringspaces=false            % 
+}}
+
+
+% Python environment
+\lstnewenvironment{python}[1][]
+{
+\pythonstyle
+\lstset{#1}
+}
+{}
+
+% Python for external files
+\newcommand\pythonexternal[2][]{{
+\pythonstyle
+\lstinputlisting[#1]{#2}}}
+
+% Python for inline
+\newcommand\pythoninline[1]{{\pythonstyle\lstinline!#1!}}
+
+\title{Moral AI IQP Outline}
+\author{Ryan Benasutti}
+\date{November 2018}
+
+\begin{document}
+
+\maketitle
+
+\section{IQP Goals}
+
+\subsection{Outline of Goals}
+
+\begin{enumerate}
+    \item Educate people that bias in the training data set can affect the fairness of an AI, and therefore the AI should be tested.
+    \item Determine at what level of detail the AI becomes biased.
+    \item Show that AI testing is possible, necessary, and accessible.
+    \item Survey a small audience to determine which sort of thought processes go into making these moral decisions.
+\end{enumerate}
+
+\subsection{Target Audience}
+
+People who have an interest in AI and have some understanding of what machine learning is capable of. For example, the attendees of the AI conference in Rio who have an interest in developing inclusive AI but don't fully understand the technical side of that development. These people would make good students for learning about the reasoning behind and aspects of testing AI.
+
+\section{Research Plan}
+
+\subsection{Data Generation}
+
+The training and test data sets will be generated using a graphical model to influence certain distributions based on previous ones. The idea being that a distribution for one attribute could be skewed based on a different attribute, thereby producing a biased data set. Distributions can also be skewed based on whether they are in the labeled group or not (i.e. a data set could have a disproportionate number of elderly people in smaller groups). \href{https://github.com/pgmpy/pgmpy}{pgmpy} will be used to create the graphical model and infer variables' probabilities.
+
+Data sets with omitted attributes will leave them set to the relevant equivalent of zero. For example, if age is omitted, it will be set to zero; if jaywalking is omitted, it will be set to false.
+
+Attributes will be bracketed. For example, age will be bracketed into increments of 10 years. The purpose of bracketing in this manner is so that attributes can be specified in binary so the learning algorithm does not think an omitted attribute is actually specified as zero. This works because, in binary, most of the attributes will be zero normally, so specifying an omitted attribute as zero is normal to the learning algorithm. For example, as shown in Table~\ref{tab:example_age_attribute_bracketing}, the input vector for an age of 16 yrs is
+$$
+\begin{pmatrix}
+    0 & 0 & 1 & 0 & 0 & 0 & 0
+\end{pmatrix}
+$$
+
+\begin{table}[h]
+    \centering
+    \begin{tabular}{c|c|c|c|c|c|c|c}
+        Age (yr) & unspecified & 1-10 & 11-20 & 21-30 & 31-40 & 41-50 & 51-60 \\\hline
+        0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 \\
+        3 & 0 & 1 & 0 & 0 & 0 & 0 & 0 \\
+        16 & 0 & 0 & 1 & 0 & 0 & 0 & 0 \\
+        42 & 0 & 0 & 0 & 0 & 0 & 1 & 0
+    \end{tabular}
+    \caption{Example age attribute bracketing.}
+    \label{tab:example_age_attribute_bracketing}
+\end{table}
+
+Boolean values will be bracketed into three increments, as shown in Table~\ref{tab:example_boolean_attribute_bracketing}. The only notable part of this strategy for boolean value bracketing is that the input unspecified state maps directly to the output unspecified state.
+
+\begin{table}[h]
+    \centering
+    \begin{tabular}{c|c|c|c}
+        Value & unspecified & false & true \\\hline
+        unspecified & 1 & 0 & 0 \\
+        false & 0 & 1 & 0 \\
+        true & 0 & 0 & 1
+    \end{tabular}
+    \caption{Example boolean attribute bracketing.}
+    \label{tab:example_boolean_attribute_bracketing}
+\end{table}
+
+In this way, each bracket becomes its own attribute.
+
+Once the graphical model is created, each variable's probability will be inferred and used to pick an element from the variable's domain. This will be done for each variable per person and for the number of people per option.
+
+\subsection{Data Storage}
+
+The purpose of storing the generated data sets is to keep the data consistent between test iterations and to share the data with others looking to understand the research. The chosen format for data storage is JSON because it is both machine-understandable and human-understandable. After generation, the training and test data sets will be stored in JSON documents. The library \href{https://jsonpickle.github.io/}{jsonpickle} will be used to read, write, and validate these JSON documents.
+
+\subsection{Learning Algorithm}
+
+A supervised learning algorithm will be developed. Data will be labeled only based on the number of people in each option of a dilemma such that the model learns to prefer saving larger groups of people. No attributes of people will be considered in the labeling process. A unbiased data set will be used to test the trained model to detect any bias it may have learned.
+
+Data points will only be labeled based on the number of people in each of the two options so as to avoid imparting any significant set of morals on the model. The intent of this research is not to establish a recommended set of morals, but data labels are needed in some capacity to facilitate supervised learning.
+
+\href{https://keras.io/}{Keras} will be used to develop, train, and test the model with various data sets. The model's input layer will be as large as the largest group of people in a dilemma's option. For groups smaller than that, unused inputs will be left empty.
+
+\subsection{Testing}
+
+The model will be tested against consistent test data to measure classification accuracy and loss metrics. A test will consist of training the model and evaluating it against test data to measure accuracy and loss. This test will be run five times per training data set to produce an average classification accuracy and loss.
+
+\subsection{Future Work}
+
+\begin{enumerate}
+    \item Use fuzzy sets to capture uncertainty in groups of people. Each option in a dilemma would be modeled as a fuzzy set instead of as a set.
+\end{enumerate}
+
+\section{Paper Outline}
+
+\subsection{Abstract}
+
+This research is intended to educate those interested and familiar with AI about the problems surrounding training AI to make moral decisions and how to test and correct for those problems. Supervised learning was used to demonstrate the moral bias problem. This research concludes that AI testing is necessary.
+
+\subsection{Executive Summary}
+
+Background:
+\begin{enumerate}
+    \item AI will soon have to make moral decisions, so it should be designed to be fair.
+    \item In order to verify AI's fairness, testing must be employed.
+\end{enumerate}
+
+Research Objectives:
+\begin{enumerate}
+    \item Determine at what severity of bias in training data the AI becomes biased.
+    \item Show that AI testing is possible and necessary.
+    \item Survey a small audience to determine the thought processes behind making moral decisions.
+\end{enumerate}
+
+Research Methodology:
+\begin{enumerate}
+    \item Generate training data by controlling biases with a graphical model and generating an unbiased of test data.
+    \item Develop a neural network model and train it on many different biased training data sets using supervised learning and evaluate its performance against a consistent test data set to determine where the AI becomes biased.
+\end{enumerate}
+
+Findings and Analysis:
+\begin{enumerate}
+    \item The AI became biased when ...
+    \item This shows that AI testing is necessary.
+    \item We recommend that training data sets omit attributes such as ... in order to avoid training a biased AI.
+\end{enumerate}
+
+\subsection{Acknowledgements}
+
+\begin{enumerate}
+    \item Professor Therese Smith
+    \item Professor Yunus Telliel
+    \item Griffin Tabor
+\end{enumerate}
+
+\subsection{Introduction}
+
+\begin{enumerate}
+    \item AI will soon have to make moral decisions, so it should be designed to be fair.
+    \item AI testing can be employed to validate an AI's fairness against a given data set.
+    \item There is an audience which wants to learn more about AI and is a good candidate to educate about AI testing.
+    \item We also seek to understand the decision making process in humans behind these moral decisions.
+\end{enumerate}
+
+\subsection{Background}
+
+\begin{enumerate}
+    \item Introduce background readings.
+    \item Cite examples of AI that must make moral decisions.
+    \item Discuss the Moral Machine paper. This is previous research into people's decision making.
+    \item Discuss the Rio Inclusive AI conference. This is our target audience.
+\end{enumerate}
+
+\subsection{Methods}
+
+\begin{enumerate}
+    \item
+    Data will be generated using a graphical model to control bias. Biased training data sets will be used to purposefully train biased AI. The attributes considered are age, race, legal sex, jaywalking status, and driving under the influence status. The code for the attributes' domains is:
+    
+    \begin{python}
+age_states = [10, 20, 30, 40, 50, 60]
+race_states = [Race.white, Race.black,
+               Race.asian,
+               Race.native_american,
+               Race.other_race]
+legal_sex_states = [LegalSex.male,
+                    LegalSex.female]
+jaywalking_states = [False, True]
+driving_under_the_influence_states = [False,
+                                      True]
+    \end{python}
+    
+    The data will be generated using a graphical model to influence certain variables' probability distributions based on previous variables. The idea being that a distribution for one attribute could be skewed based on a different attribute, thereby producing a biased data set. Distributions can also be skewed based on whether they are in the labeled group or not (i.e. a data set could have a disproportionate number of elderly people in smaller groups). \href{https://github.com/pgmpy/pgmpy}{pgmpy} will be used to create the graphical model and infer variables' probabilities.
+
+    Data sets with omitted attributes will leave them set to the relevant equivalent of zero. For example, if age is omitted, it will be set to zero; if jaywalking is omitted, it will be set to false.
+    
+    Attributes will be bracketed. For example, age will be bracketed into increments of 10 years. The purpose of bracketing in this manner is so that attributes can be specified in binary so the learning algorithm does not think an omitted attribute is actually specified as zero. This works because, in binary, most of the attributes will be zero normally, so specifying an omitted attribute as zero is normal to the learning algorithm. For example, as shown in Table~\ref{tab:example_age_attribute_bracketing}, the input vector for an age of 16 yrs is
+    
+    $$
+    \begin{pmatrix}
+        0 & 0 & 1 & 0 & 0 & 0 & 0
+    \end{pmatrix}
+    $$
+    
+    \begin{table}[h]
+        \centering
+        \begin{tabular}{c|c|c|c|c|c|c|c}
+            Age (yr) & unspecified & 1-10 & 11-20 & 21-30 & 31-40 & 41-50 & 51-60 \\\hline
+            0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 \\
+            3 & 0 & 1 & 0 & 0 & 0 & 0 & 0 \\
+            16 & 0 & 0 & 1 & 0 & 0 & 0 & 0 \\
+            42 & 0 & 0 & 0 & 0 & 0 & 1 & 0
+        \end{tabular}
+        \caption{Example age attribute bracketing.}
+        \label{tab:example_age_attribute_bracketing}
+    \end{table}
+    
+    Boolean values will be bracketed into three increments, as shown in Table~\ref{tab:example_boolean_attribute_bracketing}. The only notable part of this strategy for boolean value bracketing is that the input unspecified state maps directly to the output unspecified state.
+    
+    \begin{table}[h]
+        \centering
+        \begin{tabular}{c|c|c|c}
+            Value & unspecified & false & true \\\hline
+            unspecified & 1 & 0 & 0 \\
+            false & 0 & 1 & 0 \\
+            true & 0 & 0 & 1
+        \end{tabular}
+        \caption{Example boolean attribute bracketing.}
+        \label{tab:example_boolean_attribute_bracketing}
+    \end{table}
+    
+    Once the graphical model is created, each variable's probability will be inferred and used to pick an element from the variable's domain. This will be done for each variable per person and for the number of people per option.
+    
+    \item JSON will be used to store data with jsonpickle.
+    
+    \item Supervised learning will be used. Alternative methods considered:
+    \begin{enumerate}
+        \item Unsupervised learning (autoencoder) so labeling the data is not necessary (want to avoid imparting a set of morals). This would do a good job at dimensionality reduction but would not learn in the way we want it to.
+        \item Unsupervised learning for dimensionality reduction followed by supervised learning (to handle the variable number of people in each option). This might work but is more complicated than necessary.
+        \item Recurrent/Relational neural network (to handle the variable number of people in each option). This is not what we want because RNN's are good at predicting the next element in a list, not at classifying.
+    \end{enumerate}
+    
+    \item The AI will be tested against a consistent data set. This data set will be unique from the training data sets and will be generated without bias.
+\end{enumerate}
+
+\subsection{Findings and Analysis}
+
+\begin{enumerate}
+    \item Our research found that the AI became biased when ...
+    \item Our recommendation to avoid biased AI is to format the training data such that ...
+    \item The survey results were ... and we extrapolate that the thought process behind these moral decisions is ...
+\end{enumerate}
+
+\subsection{Conclusion}
+
+\begin{enumerate}
+    \item Our research found that AI becomes biased when ...
+    \item In order to avoid biased AI, we recommend formatting training data such that ...
+\end{enumerate}
+
+\subsection{References}
+
+\end{document}
