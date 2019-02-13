@@ -78,7 +78,7 @@ def parse_dense_results(data):
 
 
 if __name__ == '__main__':
-    with open("dense results for test option 40-60 jaywalking 100-0 0-100", "r") as f:
+    with open("dense results for test 40-60 100-0 0-100", "r") as f:
         data = f.readlines()
         y_data, x_data, z_data_acc, z_data_loss = parse_dense_results(data)
 
@@ -90,20 +90,21 @@ if __name__ == '__main__':
             contours = plt.contour(X, Y, Z, 9)
             plt.clabel(contours, inline=True)
             plt.colorbar()
-            plt.xlabel("first option probability")
-            plt.ylabel("jaywalking probability")
+            plt.xlabel("Probability of being in the first option")
+            plt.ylabel("Probability of not jaywalking")
             plt.title(title)
 
             fig = plt.figure()
             ax = fig.gca(projection='3d')
             ax.plot_surface(X, Y, Z, cmap=cm.coolwarm)
             ax.view_init(10, -30)
-            plt.xlabel("first option probability")
-            plt.ylabel("jaywalking probability")
+            plt.xlabel("Probability of being in the first option")
+            plt.ylabel("Probability of not jaywalking")
             plt.title(title)
 
             plt.show()
 
 
-        generate_plots(x_data, y_data, z_data_acc, "Classification accuracy with two options")
-        generate_plots(x_data, y_data, z_data_loss, "Loss with two options")
+        generate_plots(x_data, y_data, z_data_acc,
+                       "Classification accuracy against test 40-60 100-0 0-100")
+        generate_plots(x_data, y_data, z_data_loss, "Loss against test 40-60 100-0 0-100")
