@@ -115,7 +115,31 @@ def train_and_test(filename, option_cpd, jaywalking_cpd, test_data, test_labels,
 
 
 if __name__ == '__main__':
-    test_data_filename = "test option 40-60 jaywalking 100-0 0-100"
+    # generators = [
+    #     DilemmaGenerator(
+    #         option_vals=[
+    #             [0.5, 0.5]
+    #         ],
+    #         jaywalking_vals=[
+    #             [0.5, 0.5],
+    #             [0.5, 0.5]
+    #         ]
+    #     ),
+    #     DilemmaGenerator(
+    #         option_vals=[
+    #             [0.5, 0.5]
+    #         ],
+    #         jaywalking_vals=[
+    #             [0.5, 0.5],
+    #             [0.5, 0.5]
+    #         ]
+    #     )
+    # ]
+    #
+    # write_data_to_file(TrainMetadata(50000, 10), generators,
+    #                    "test 50-50 50-50 50-50")
+
+    test_data_filename = "test 50-50 50-50 50-50"
     results_filename = "dense results for " + test_data_filename
 
     test_data, test_labels, test_metadata = read_data_from_file(test_data_filename)
