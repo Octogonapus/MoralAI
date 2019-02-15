@@ -91,7 +91,7 @@ if __name__ == '__main__':
             plt.clabel(contours, inline=True)
             plt.colorbar()
             plt.xlabel("Probability of being in the first option")
-            plt.ylabel("Probability of not jaywalking")
+            plt.ylabel("Probability of jaywalking in the first option")
             plt.title(title)
 
             fig = plt.figure()
@@ -99,7 +99,7 @@ if __name__ == '__main__':
             ax.plot_surface(X, Y, Z, cmap=cm.coolwarm)
             ax.view_init(10, -30)
             plt.xlabel("Probability of being in the first option")
-            plt.ylabel("Probability of not jaywalking")
+            plt.ylabel("Probability of jaywalking in the first option")
             plt.title(title)
 
             plt.show()
