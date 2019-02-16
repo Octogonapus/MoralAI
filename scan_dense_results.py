@@ -78,7 +78,7 @@ def parse_dense_results(data):
 
 
 if __name__ == '__main__':
-    with open("dense results for test 40-60 100-0 0-100", "r") as f:
+    with open("dense results for test 40-60 0-100 100-0", "r") as f:
         data = f.readlines()
         y_data, x_data, z_data_acc, z_data_loss = parse_dense_results(data)
 
@@ -106,5 +106,5 @@ if __name__ == '__main__':
 
 
         generate_plots(x_data, y_data, z_data_acc,
-                       "Classification accuracy against test 40-60 100-0 0-100")
-        generate_plots(x_data, y_data, z_data_loss, "Loss against test 40-60 100-0 0-100")
+                       "Classification accuracy against test 40-60 0-100 100-0")
+        generate_plots(x_data, y_data, z_data_loss, "Loss against test 40-60 0-100 100-0")
