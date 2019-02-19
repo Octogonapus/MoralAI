@@ -103,11 +103,19 @@ class Person:
         self.driving_under_the_influence = driving_under_the_influence
 
     def export_as_list(self):
+        """
+        Exports this person as a list (bit vector).
+        :return: The list of bits representing this person.
+        """
         return age_mapping[self.age] + race_mapping[self.race] + legal_sex_mapping[self.legal_sex] + jaywalking_mapping[
             self.jaywalking] + driving_under_the_influence_mapping[self.driving_under_the_influence]
 
     @staticmethod
     def export_empty_person_as_list():
+        """
+        Exports an empty person, meant to be used for padding.
+        :return: The list of bits representing an empty person.
+        """
         return [0, 0, 0, 0, 0, 0, 0,
                 0, 0, 0, 0, 0, 0,
                 0, 0, 0,
@@ -117,10 +125,24 @@ class Person:
 
 class Dilemma:
     def __init__(self, options: List[List[Person]], max_size: int):
+        """
+        A Dilemma is a list of options of people.
+
+        :param options: The options.
+        :param max_size: The maximum number of people in an option.
+        """
+
         self.options = options
         self.max_size = max_size
 
     def export_option(self, option: List[Person]):
+        """
+        Exports all people in the option and pads the rest up to self.max_size.
+
+        :param option: A list of people comprising the option.
+        :return: A list of bits representing the people, padded to self.max_size number of people.
+        """
+
         return [
             *([] if len(option) is 0 else reduce(
                 lambda a, b: a + b, map(lambda a: a.export_as_list(), option)
