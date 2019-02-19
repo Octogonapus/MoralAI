@@ -83,18 +83,19 @@ class Person:
                  jaywalking: bool = None, driving_under_the_influence: bool = None):
         self.age = age
 
-        if 1 <= self.age <= 10:
-            self.age = 1
-        elif 11 <= self.age <= 20:
-            self.age = 11
-        elif 21 <= self.age <= 30:
-            self.age = 21
-        elif 31 <= self.age <= 40:
-            self.age = 31
-        elif 41 <= self.age <= 50:
-            self.age = 41
-        elif 51 <= self.age <= 60:
-            self.age = 51
+        if self.age is not None:
+            if self.age <= 10:
+                self.age = 1
+            elif 11 <= self.age <= 20:
+                self.age = 11
+            elif 21 <= self.age <= 30:
+                self.age = 21
+            elif 31 <= self.age <= 40:
+                self.age = 31
+            elif 41 <= self.age <= 50:
+                self.age = 41
+            else:
+                self.age = 51
 
         self.race = race
         self.legal_sex = legal_sex
