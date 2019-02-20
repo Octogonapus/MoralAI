@@ -71,9 +71,10 @@ def create_person_from_export(export):
     return Person(
         age=lookup_from_export(age_mapping, export[0:7]),
         race=lookup_from_export(race_mapping, export[7:13]),
-        legal_sex=lookup_from_export(legal_sex_mapping, export[13:15]),
-        jaywalking=lookup_from_export(jaywalking_mapping, export[15:18]),
-        driving_under_the_influence=lookup_from_export(driving_under_the_influence_mapping, export[18:21])
+        legal_sex=lookup_from_export(legal_sex_mapping, export[13:16]),
+        jaywalking=lookup_from_export(jaywalking_mapping, export[16:19]),
+        driving_under_the_influence=lookup_from_export(driving_under_the_influence_mapping,
+                                                       export[19:22])
     )
 
 
@@ -102,13 +103,22 @@ class Person:
         self.jaywalking = jaywalking
         self.driving_under_the_influence = driving_under_the_influence
 
+    def __eq__(self, o: object) -> bool:
+        if isinstance(o, Person):
+            return self.age == o.age and self.race == o.race and self.legal_sex == o.legal_sex \
+                   and self.jaywalking == o.jaywalking and self.driving_under_the_influence == \
+                   o.driving_under_the_influence
+        return False
+
     def export_as_list(self):
         """
         Exports this person as a list (bit vector).
         :return: The list of bits representing this person.
         """
-        return age_mapping[self.age] + race_mapping[self.race] + legal_sex_mapping[self.legal_sex] + jaywalking_mapping[
-            self.jaywalking] + driving_under_the_influence_mapping[self.driving_under_the_influence]
+        return age_mapping[self.age] + race_mapping[self.race] + legal_sex_mapping[self.legal_sex] + \
+               jaywalking_mapping[
+                   self.jaywalking] + driving_under_the_influence_mapping[
+                   self.driving_under_the_influence]
 
     @staticmethod
     def export_empty_person_as_list():
@@ -212,6 +222,29 @@ class TestPersonExport(unittest.TestCase):
                 0, 1, 0,
                 0, 0, 1
             ]
+        )
+
+
+class TestPersonFromExport(unittest.TestCase):
+
+    def testFullPersonFromExport(self):
+        export = [
+            0, 0, 1, 0, 0, 0, 0,
+            0, 0, 0, 0, 1, 0,
+            0, 0, 1,
+            0, 1, 0,
+            0, 0, 1
+        ]
+
+        self.assertEqual(
+            create_person_from_export(export),
+            Person(
+                age=11,
+                race=Race.native_american,
+                legal_sex=LegalSex.female,
+                jaywalking=True,
+                driving_under_the_influence=False
+            )
         )
 
 
