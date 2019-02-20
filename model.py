@@ -146,15 +146,17 @@ def create_dilemma_from_export(export, num_options: int, max_size: int):
     options = []
     person_export_length = len(Person.export_empty_person_as_list())
     for i in range(num_options):
-        option_slice = export[i * max_size: (i + 1) * max_size]
+        option_slice = export[i * max_size * person_export_length:
+                              (i + 1) * max_size * person_export_length + 1]
 
         people_in_option = []
         for j in range(max_size):
-            person_slice = option_slice[j * person_export_length: (j + 1) * person_export_length]
+            person_slice = option_slice[j * person_export_length:
+                                        (j + 1) * person_export_length + 1]
             people_in_option.append(create_person_from_export(person_slice))
 
         options.append(people_in_option)
-    return options
+    return Dilemma(options, max_size)
 
 
 class Dilemma:
@@ -168,6 +170,11 @@ class Dilemma:
 
         self.options = options
         self.max_size = max_size
+
+    def __eq__(self, o: object) -> bool:
+        if isinstance(o, Dilemma):
+            return self.options == o.options and self.max_size == o.max_size
+        return False
 
     def export_option(self, option: List[Person]):
         """
@@ -226,6 +233,20 @@ class TestPersonExport(unittest.TestCase):
 
 
 class TestPersonFromExport(unittest.TestCase):
+
+    def testEmptyPersonFromExport(self):
+        export = [
+            1, 0, 0, 0, 0, 0, 0,
+            1, 0, 0, 0, 0, 0,
+            1, 0, 0,
+            1, 0, 0,
+            1, 0, 0
+        ]
+
+        self.assertEqual(
+            create_person_from_export(export),
+            Person()
+        )
 
     def testFullPersonFromExport(self):
         export = [
@@ -376,6 +397,33 @@ class TestDilemmaExport(unittest.TestCase):
                 0, 0, 0
             ],
             raw
+        )
+
+
+class TestDilemmaFromExport(unittest.TestCase):
+
+    def testDilemmaWith3OptionsOfEmptyPeopleFromExport(self):
+        export = [
+            1, 0, 0, 0, 0, 0, 0,
+            1, 0, 0, 0, 0, 0,
+            1, 0, 0,
+            1, 0, 0,
+            1, 0, 0,
+            1, 0, 0, 0, 0, 0, 0,
+            1, 0, 0, 0, 0, 0,
+            1, 0, 0,
+            1, 0, 0,
+            1, 0, 0,
+            1, 0, 0, 0, 0, 0, 0,
+            1, 0, 0, 0, 0, 0,
+            1, 0, 0,
+            1, 0, 0,
+            1, 0, 0
+        ]
+
+        self.assertEqual(
+            create_dilemma_from_export(export, 3, 1),
+            Dilemma([[Person()], [Person()], [Person()]], 1)
         )
 
 
