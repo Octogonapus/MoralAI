@@ -7,6 +7,7 @@ import numpy as np
 from matplotlib import cm
 from mpl_toolkits.mplot3d import Axes3D  # required
 
+from model import create_dilemma_from_export
 from generate_data_pgmpy import DilemmaGenerator
 from manage_data import TrainMetadata, write_data_to_file, read_data_from_file, \
     preprocess_data_before_saving
@@ -71,13 +72,30 @@ def train_and_test_iteration(filename, train_data, train_labels, train_metadata,
     print("Accuracy:")
     print(accuracy)
 
+    predictions = model.predict(test_data)
     print("Predictions:")
-    print(model.predict(test_data))
+    print(predictions)
     print("Expected:")
     print(test_labels)
 
+    num_jaywalkers = 0
+    for i in range(len(test_labels)):
+        prediction_label = predictions[i].tolist()
+        test_label = test_labels[i].tolist()
+
+        prediction_index = prediction_label.index(max(prediction_label))
+        test_index = test_label.index(max(test_label))
+
+        if prediction_index != test_index:
+            dilemma = create_dilemma_from_export(test_data[i].tolist(), 2,
+                                                 test_metadata.max_num_people_per_option)
+
+            for person in dilemma.options[prediction_index]:
+                if person.jaywalking:
+                    num_jaywalkers += 1
+
     with open(filename, "a") as f:
-        f.write("%s,%s\n" % (loss, accuracy))
+        f.write("%s,%s,%s\n" % (loss, accuracy, num_jaywalkers / test_metadata.train_data_size))
 
 
 def train_and_test(filename, option_cpd, jaywalking_cpd, test_data, test_labels, test_metadata):
@@ -139,7 +157,7 @@ if __name__ == '__main__':
     # write_data_to_file(TrainMetadata(50000, 10), generators,
     #                    "test 40-60 0-100 100-0")
 
-    test_data_filename = "test 40-60 100-0 0-100"
+    test_data_filename = "test 50-50 50-50 50-50"
     results_filename = "dense results for " + test_data_filename
 
     test_data, test_labels, test_metadata = read_data_from_file(test_data_filename)
