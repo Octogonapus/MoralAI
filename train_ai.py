@@ -157,7 +157,7 @@ if __name__ == '__main__':
     # write_data_to_file(TrainMetadata(50000, 10), generators,
     #                    "test 40-60 0-100 100-0")
 
-    test_data_filename = "test 50-50 50-50 50-50"
+    test_data_filename = "test 40-60 0-100 100-0"
     results_filename = "dense results for " + test_data_filename
 
     test_data, test_labels, test_metadata = read_data_from_file(test_data_filename)
