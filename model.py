@@ -3,8 +3,6 @@ from enum import Enum
 from functools import reduce
 from typing import List
 
-import numpy as np
-
 
 class Race(Enum):
     white = 1
