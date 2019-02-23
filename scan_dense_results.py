@@ -19,6 +19,7 @@ def parse_dense_results(data: str, item: str):
         inner_data = []
         for jaywalking_level_result in option_level_result["jaywalking_level_results"]:
             jaywalking_probability.append(jaywalking_level_result["jaywalking_cpd"][0])
+
             num_results = len(jaywalking_level_result["results"])
             inner_data.append(
                 sum([jaywalking_level_result["results"][i][item] for i in range(num_results)]) /
@@ -27,7 +28,7 @@ def parse_dense_results(data: str, item: str):
 
         z_data.append(inner_data)
 
-    return first_option_probability, jaywalking_probability, z_data
+    return first_option_probability, list(dict.fromkeys(jaywalking_probability)), z_data
 
 
 def generate_plots(data_tuple, title):
@@ -62,7 +63,7 @@ def generate_plots(data_tuple, title):
     # axarr[1].xlabel("Probability of being in the first option")
     # axarr[1].ylabel("Probability of jaywalking in the first option")
 
-    fig1.show()
+    plt.show()
 
 
 if __name__ == '__main__':
