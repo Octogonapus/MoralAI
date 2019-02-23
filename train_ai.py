@@ -37,7 +37,7 @@ def train_and_test_iteration(train_data, train_labels, train_metadata, test_data
                   optimizer='sgd',
                   metrics=[metrics.categorical_accuracy])
 
-    model.fit(train_data, train_labels, epochs=1, batch_size=32)
+    model.fit(train_data, train_labels, epochs=5, batch_size=32)
 
     (loss, accuracy) = model.evaluate(test_data, test_labels, batch_size=32)
     print("Loss:")
@@ -100,7 +100,7 @@ def train_and_test(option_cpd, jaywalking_cpd, test_data, test_labels, test_meta
     ]
 
     train_data, train_labels, train_metadata = generate_training_data_in_memory(
-        TrainMetadata(5, 10),
+        TrainMetadata(50000, 10),
         generators
     )
 
@@ -153,11 +153,11 @@ if __name__ == '__main__':
     num_people = len(test_labels) * 2 * test_metadata.max_num_people_per_option
 
     option_level_results = []
-    for first_option_probability in np.linspace(0, 1, 1):
+    for first_option_probability in np.linspace(0, 1, 10):
         option_cpd = [first_option_probability, 1 - first_option_probability]
 
         jaywalking_level_results = []
-        for jaywalking_probability in np.linspace(0, 1, 1):
+        for jaywalking_probability in np.linspace(0, 1, 10):
             jaywalking_cpd = [jaywalking_probability, 1 - jaywalking_probability]
             jaywalking_level_results.append({
                 "jaywalking_cpd": jaywalking_cpd,
