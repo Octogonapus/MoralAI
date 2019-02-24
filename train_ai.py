@@ -113,6 +113,7 @@ def train_and_test(option_cpd, jaywalking_cpd, test_data, test_labels, test_meta
         test_results_json.append({
             "loss": loss,
             "accuracy": accuracy,
+            "num_jaywalkers": num_jaywalkers,
             "prob_jaywalking_when_wrong": num_jaywalkers_when_wrong / num_jaywalkers
         })
 
@@ -157,7 +158,8 @@ if __name__ == '__main__':
         option_cpd = [first_option_probability, 1 - first_option_probability]
 
         jaywalking_level_results = []
-        for jaywalking_probability in np.linspace(0, 1, 10):
+        for jaywalking_probability in np.append(np.linspace(0, 3 / 10, 5),
+                                                np.linspace(7 / 10, 1, 5)):
             jaywalking_cpd = [jaywalking_probability, 1 - jaywalking_probability]
             jaywalking_level_results.append({
                 "jaywalking_cpd": jaywalking_cpd,
