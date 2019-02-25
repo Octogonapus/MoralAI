@@ -82,7 +82,7 @@ def generate_plots(data_tuple, title):
 
 
 if __name__ == '__main__':
-    test_name = "test 40-60 100-0 0-100"
+    test_name = "test 40-60 0-100 100-0"
     with open("dense results for " + test_name, "r") as f:
         data = f.readlines()
         generate_plots(parse_dense_results(data[0], "accuracy"),
