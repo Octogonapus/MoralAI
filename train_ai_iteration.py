@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 # This file is part of MoralAI.
 #
 # MoralAI is free software: you can redistribute it and/or modify
@@ -12,7 +13,9 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with MoralAI.  If not, see <https://www.gnu.org/licenses/>.
+import getopt
 import json
+import sys
 
 from keras import Sequential, losses, metrics
 from keras.layers import Dense
@@ -135,3 +138,37 @@ def train_and_test(test_data_filename, option_cpd, jaywalking_cpd):
         f.write(json.dumps(
             test_results_json
         ))
+
+
+def main(argv):
+    try:
+        opts, args = getopt.getopt(argv, "o:", ["ocpd=", "jcpd="])
+    except getopt.GetoptError:
+        print("Usage: train_ai.py -o <test_file_prefix>")
+        sys.exit(2)
+
+    test_data_filename = None
+    ocpd = None
+    jcpd = None
+    for opt, arg in opts:
+        if opt == "-o":
+            test_data_filename = arg
+        elif opt == "--ocpd":
+            ocpd = float(arg)
+        elif opt == "--jcpd":
+            jcpd = float(arg)
+
+    if test_data_filename is None:
+        print("-o argument required")
+        print("Usage: train_ai.py -o <test_file_prefix>")
+        sys.exit(2)
+    elif ocpd is None:
+        print("--ocpd argument required")
+        print("Usage: train_ai.py -o <test_file_prefix>")
+        sys.exit(2)
+    elif jcpd is None:
+        print("--jcpd argument required")
+        print("Usage: train_ai.py -o <test_file_prefix>")
+        sys.exit(2)
+
+    train_and_test(test_data_filename, [ocpd, 1 - ocpd], [jcpd, 1 - jcpd])
