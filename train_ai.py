@@ -23,7 +23,8 @@ import numpy as np
 
 from model import create_dilemma_from_export
 from generate_data_pgmpy import DilemmaGenerator
-from manage_data import TrainMetadata, read_data_from_file, preprocess_data_before_saving
+from manage_data import TrainMetadata, read_data_from_file, preprocess_data_before_saving, \
+    write_data_to_file
 
 
 def generate_training_data_in_memory(metadata: TrainMetadata, generators):
@@ -142,8 +143,8 @@ if __name__ == '__main__':
     #             [0.4, 0.6]
     #         ],
     #         jaywalking_vals=[
-    #             [0, 1],
-    #             [1, 0]
+    #             [0.2, 0.8],
+    #             [0.8, 0.2]
     #         ]
     #     ),
     #     DilemmaGenerator(
@@ -151,16 +152,16 @@ if __name__ == '__main__':
     #             [0.6, 0.4]
     #         ],
     #         jaywalking_vals=[
-    #             [1, 0],
-    #             [0, 1]
+    #             [0.8, 0.2],
+    #             [0.2, 0.8]
     #         ]
     #     )
     # ]
     #
     # write_data_to_file(TrainMetadata(50000, 10), generators,
-    #                    "test 40-60 0-100 100-0")
+    #                    "test 40-60 20-80 80-20")
 
-    test_data_filename = "test 40-60 0-100 100-0"
+    test_data_filename = "test 40-60 20-80 80-20"
     results_filename = "dense results for " + test_data_filename
 
     test_data, test_labels, test_metadata = read_data_from_file(test_data_filename)
