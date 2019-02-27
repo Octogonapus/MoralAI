@@ -51,38 +51,28 @@ def generate_plots(data_tuple, title):
     X, Y = np.meshgrid(np.array(x_data), np.array(y_data))
     Z = np.array(z_data)
 
-    fig1 = plt.figure(1, figsize=plt.figaspect(0.5))
+    fig1 = plt.figure(1, figsize=(12, 6))
     fig1.suptitle(title)
 
     ax = fig1.add_subplot(1, 2, 1)
     contours = ax.contour(X, Y, Z, 9)
     fig1.colorbar(contours, ax=ax)
-    ax.set_xlabel("Probability of being in the first option")
-    ax.set_ylabel("Probability of jaywalking in the first option")
+    ax.set_xlabel("P(O = first_option)")
+    ax.set_ylabel("P(J | O = first_option)")
+    ax.set_title(" ")  # So the figure title doesn't overlap
 
     ax = fig1.add_subplot(1, 2, 2, projection='3d')
     ax.plot_surface(X, Y, Z, cmap=cm.coolwarm)
     ax.view_init(25, -35)
-    ax.set_xlabel("Probability of being in the first option")
-    ax.set_ylabel("Probability of jaywalking in the first option")
-
-    # contours = axarr[0].contour(X, Y, Z, 9)
-    # f.clabel(contours, inline=True)
-    # f.colorbar()
-    # axarr[0].xlabel("Probability of being in the first option")
-    # axarr[0].ylabel("Probability of jaywalking in the first option")
-    #
-    # ax = axarr[1].gca(projection='3d')
-    # ax.plot_surface(X, Y, Z, cmap=cm.coolwarm)
-    # ax.view_init(10, -30)
-    # axarr[1].xlabel("Probability of being in the first option")
-    # axarr[1].ylabel("Probability of jaywalking in the first option")
+    ax.set_xlabel("P(O = first_option)")
+    ax.set_ylabel("P(J | O = first_option)")
+    ax.set_title(" ")  # So the figure title doesn't overlap
 
     plt.show()
 
 
 if __name__ == '__main__':
-    test_name = "test 40-60 20-80 80-20"
+    test_name = "test 40-60 100-0 0-100"
     with open("dense results for " + test_name, "r") as f:
         data = f.readlines()
         generate_plots(parse_dense_results(data[0], "accuracy"),
