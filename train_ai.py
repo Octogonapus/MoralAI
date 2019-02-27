@@ -143,8 +143,8 @@ if __name__ == '__main__':
     #             [0.4, 0.6]
     #         ],
     #         jaywalking_vals=[
-    #             [0.2, 0.8],
-    #             [0.8, 0.2]
+    #             [0.8, 0.2],
+    #             [0.2, 0.8]
     #         ]
     #     ),
     #     DilemmaGenerator(
@@ -152,16 +152,16 @@ if __name__ == '__main__':
     #             [0.6, 0.4]
     #         ],
     #         jaywalking_vals=[
-    #             [0.8, 0.2],
-    #             [0.2, 0.8]
+    #             [0.2, 0.8],
+    #             [0.8, 0.2]
     #         ]
     #     )
     # ]
     #
     # write_data_to_file(TrainMetadata(50000, 10), generators,
-    #                    "test 40-60 20-80 80-20")
+    #                    "test 40-60 80-20 20-80")
 
-    test_data_filename = "test 40-60 20-80 80-20"
+    test_data_filename = "test 40-60 80-20 20-80"
     results_filename = "dense results for " + test_data_filename
 
     test_data, test_labels, test_metadata = read_data_from_file(test_data_filename)
