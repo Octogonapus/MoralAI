@@ -8,3 +8,4 @@ __pycache__
 test 40-60 0-100 100-0 set.zip
 test 40-60 100-0 0-100 set.zip
 test 50-50 50-50 50-50 set.zip
+.vscode
