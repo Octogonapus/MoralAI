@@ -12,7 +12,6 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with MoralAI.  If not, see <https://www.gnu.org/licenses/>.
-
 from random import choices
 from pgmpy.models import BayesianModel
 from pgmpy.factors.discrete import TabularCPD
