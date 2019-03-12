@@ -15,7 +15,7 @@
     {\includegraphics[height=2in]{figures/WPI_Inst_Prim_FulClr.png}}
 }
 \author{Ryan Benasutti}
-\date{February 2019}
+\date{March 2019}
 
 \newcommand{\code}{\texttt}
 
@@ -81,7 +81,16 @@ Findings and Analysis:
 \chapter{Introduction}
 
 \begin{enumerate}
-    \item AI will soon have to make moral decisions, so it should be designed to be fair.
+    \item Autonomous vehicle technology is growing rapidly and AI is a key piece of that technology.
+    As this technology gets closer to attaining full autonomy, the AI deployed in these systems will
+    have greater responsibility than ever. These AI systems must be explainable fair, i.e. they must
+    both make decisions using only the least amount of information necessary for optimal performance
+    and make those decisions predictably and correctly. For example, the AI in an autonomous vehicle
+    does not need to be supplied with information about a pedestrian's race, even though race may be
+    an impactful trait in other fields, especially medical fields \cite{sickeCellDisease}.
+    Furthermore, these AI systems must also be explainable for legal reasons, such as determining
+    which party is at fault in the event of a car accident or, in the European Union, complying with
+    a user's "right to explanation" \cite{goodman2017european}.
     
     \item AI testing can be employed to validate an AI's fairness against a given data set.
     
@@ -101,8 +110,19 @@ Findings and Analysis:
     \item Introduce background readings.
     
     \item Cite examples of AI that must (or will in the near future) make moral decisions.
+    \begin{itemize}
+        \item \cite{bojarski2016end} performs end-to-end learning which "map raw pixels from a
+        single front-facing camera directly to steering commands". With this approach, the AI will
+        have to directly respond to pedestrians and other external stimuli.
+    \end{itemize}
     
-    \item Discuss the Moral Machine paper. This is previous research into people's decision making.
+    \item Discuss the Moral Machine paper \cite{awad2018moral}. This is previous research into
+    people's decision making.
+    \begin{itemize}
+        \item Spare humans over animals
+        \item Spare more lives
+        \item Spare young lives
+    \end{itemize}
     
     \item Discuss the Rio Inclusive AI conference. This is our target audience.
 \end{enumerate}
