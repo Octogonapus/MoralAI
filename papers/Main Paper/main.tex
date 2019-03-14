@@ -83,7 +83,7 @@ Findings and Analysis:
 \begin{enumerate}
     \item Autonomous vehicle technology is growing rapidly and AI is a key piece of that technology.
     As this technology gets closer to attaining full autonomy, the AI deployed in these systems will
-    have greater responsibility than ever. These AI systems must be explainable fair, i.e. they must
+    have greater responsibility than ever. These AI systems must be explainably fair, i.e. they must
     both make decisions using only the least amount of information necessary for optimal performance
     and make those decisions predictably and correctly. For example, the AI in an autonomous vehicle
     does not need to be supplied with information about a pedestrian's race, even though race may be
@@ -92,16 +92,18 @@ Findings and Analysis:
     which party is at fault in the event of a car accident or, in the European Union, complying with
     a user's "right to explanation" \cite{goodman2017european}.
     
-    \item AI testing can be employed to validate an AI's fairness against a given data set.
+    \item The demand for explainable AI is increasing, such as DARPA's Explainable Artificial
+    Intelligence (XAI) program \cite{gunning2016explainable}. This program aims to develop
+    explainable AI systems such as in Figure~\ref{fig:darpa_xai}.
     
     \item There is an audience which wants to learn more about AI and is a good candidate to educate
     about AI testing.
     
-    \item There is also increasing demand for explainable AI, such as DARPA's Explainable Artificial
-    Intelligence (XAI) program \cite{gunning2016explainable}.
-    
-    \item We also seek to understand the decision making process in humans behind these moral
-    decisions.
+    \item We seek to empirically demonstrate how an AI can learn a bias and the severity of that
+    bias. Testing can be employed to evaluate the severity of a bias.
+
+    \item We also seek to understand the decision making process in humans behind making moral
+    decisions in unavoidable accident scenarios, i.e. dilemmas.
 \end{enumerate}
 
 \chapter{Background}
@@ -301,6 +303,13 @@ to produce an average classification accuracy and loss.
     \includegraphics[scale=0.6]{figures/network.png}
     \caption[]{The graphical model.}
     \label{fig:graphical_model_image}
+\end{figure}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=1.1]{figures/xai-figure2.png}
+    \caption[]{DARPA's XAI Concept~\protect\cite[]{gunningXAIProgram}}
+    \label{fig:darpa_xai}
 \end{figure}
 
 % 
