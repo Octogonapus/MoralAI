@@ -92,7 +92,7 @@ def train_and_test_iteration(train_data, train_labels, train_metadata, test_data
     return loss, accuracy, num_jaywalkers, num_jaywalkers_when_wrong
 
 
-def train_and_test(test_data_filename, option_cpd, jaywalking_cpd):
+def train_and_test(test_data_filename: str, option_cpd, jaywalking_cpd):
     test_data, test_labels, test_metadata = read_data_from_file(test_data_filename)
 
     generators = [
@@ -134,17 +134,18 @@ def train_and_test(test_data_filename, option_cpd, jaywalking_cpd):
             "prob_jaywalking_when_wrong": num_jaywalkers_when_wrong / num_jaywalkers
         })
 
-    with open("results from iteration for " + test_data_filename, "a") as f:
+    test_data_filename_without_path = test_data_filename[test_data_filename.rfind('/') + 1:]
+    with open("results from iteration for " + test_data_filename_without_path, "a") as f:
         f.write(json.dumps(
             test_results_json
-        ))
+        ) + "\n")
 
 
 def main(argv):
     try:
         opts, args = getopt.getopt(argv, "o:", ["ocpd=", "jcpd="])
     except getopt.GetoptError:
-        print("Usage: train_ai.py -o <test_file_prefix>")
+        print("Usage: train_ai_iteration.py -o <test_file_prefix>")
         sys.exit(2)
 
     test_data_filename = None
@@ -160,15 +161,19 @@ def main(argv):
 
     if test_data_filename is None:
         print("-o argument required")
-        print("Usage: train_ai.py -o <test_file_prefix>")
+        print("Usage: train_ai_iteration.py -o <test_file_prefix>")
         sys.exit(2)
     elif ocpd is None:
         print("--ocpd argument required")
-        print("Usage: train_ai.py -o <test_file_prefix>")
+        print("Usage: train_ai_iteration.py --ocpd <first_option_prob>")
         sys.exit(2)
     elif jcpd is None:
         print("--jcpd argument required")
-        print("Usage: train_ai.py -o <test_file_prefix>")
+        print("Usage: train_ai_iteration.py --jcpd <jaywalking_prob>")
         sys.exit(2)
 
     train_and_test(test_data_filename, [ocpd, 1 - ocpd], [jcpd, 1 - jcpd])
+
+
+if __name__ == '__main__':
+    main(sys.argv[1:])
