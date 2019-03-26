@@ -35,39 +35,6 @@ research in building explainable systems. In this paper, a number of problems ar
 explainable artificial intelligence, training data, are explored. A solution to these problems is
 presented.
 
-\chapter*{Executive Summary}
-
-Background:
-\begin{enumerate}
-    \item AI will soon have to make moral decisions, so it should be designed to be fair.
-    \item In order to verify AI's fairness, testing must be employed.
-\end{enumerate}
-
-Research Objectives:
-\begin{enumerate}
-    \item Determine at what severity of bias in training data the neural network becomes biased.
-    \item Show that neural network testing is possible and necessary.
-    \item Survey a small audience to determine the thought processes behind making moral decisions.
-\end{enumerate}
-
-Research Methodology:
-\begin{enumerate}
-    \item Use a graphical model to generate training and test data with controlled bias.
-    
-    \item Develop a neural network and train it on many different biased training data sets using
-    supervised learning and evaluate its accuracy to determine where it becomes biased.
-\end{enumerate}
-
-Findings and Analysis:
-\begin{enumerate}
-    \item The neural network became biased when ...
-    
-    \item This shows that neural network testing is necessary.
-    
-    \item We recommend that training data sets omit attributes such as ... in order to avoid
-    training a biased neural network.
-\end{enumerate}
-
 \chapter*{Acknowledgements}
 
 \begin{enumerate}
@@ -94,10 +61,12 @@ Findings and Analysis:
     
     \item The demand for explainable AI is increasing, such as DARPA's Explainable Artificial
     Intelligence (XAI) program \cite{gunning2016explainable}. This program aims to develop
-    explainable AI systems such as in Figure~\ref{fig:darpa_xai}.
-    
-    \item There is an audience which wants to learn more about AI and is a good candidate to educate
-    about AI testing. (Again do I even need to bring this up?)
+    explainable AI systems such as in Figure~\ref{fig:darpa_xai}. There has also been a symposium
+    focusing on AI inclusivity towards marginalized peoples \cite{berkmanKleinCenterAI2017}
+    \cite{aiAndInclusionSymposium}. This symposium illustrates the increasing need to discuss AI
+    fairness and inclusivity in a way that non-technical people can understand. One facet of this
+    need that this paper addresses is the question of specifically how much one needs to care about
+    possible biases in the stages of AI architecture.
     
     \item We seek to demonstrate how an AI can learn a bias and empirically determine the severity
     of that bias. Classification accuracy testing will be employed to evaluate the trained AI and
@@ -128,12 +97,6 @@ Findings and Analysis:
     sparing humans over animals, sparing more lives rather than fewer, and sparing younger lives
     rather than older. The study also showed that some preferences vary between countries depending
     on that country's propensity towards egalitarianism.
-    
-    \item Discuss the Rio Inclusive AI conference. This is our target audience.
-    \begin{itemize}
-        \item What do we want to say about them?
-        \item Do I even need to bring this up?
-    \end{itemize}
 \end{enumerate}
 
 \chapter{Methods}
@@ -293,9 +256,10 @@ to produce an average classification accuracy and loss.
 \chapter{Conclusion}
 
 \begin{enumerate}
-    \item Our research found that AI becomes biased when ...
+    \item Our research found that AI becomes biased when ?. Therefore, one must take a certain
+    amount of care in dealing with bias in data (how much?).
     
-    \item In order to avoid biased AI, we recommend formatting training data such that ...
+    \item In order to avoid training biased AI, we recommend formatting training data such that ?.
     
     \item We also recommend that
     \begin{itemize}
@@ -303,6 +267,17 @@ to produce an average classification accuracy and loss.
         social scientists.
         
         \item AI could be verified by 3rd party groups in addition to a team's internal testing.
+    \end{itemize}
+
+    \item Future work includes
+    \begin{itemize}
+        \item Explanations, whether of AI decisions, architecture, or other, must be delivered in a
+        way that the user can understand. As Gilpin puts it, "The success of this goal is tied to
+        the cognition, knowledge and biases of the user: for a system to be interpretable, it must
+        produce descriptions that are simple enough for a person to understand using a vocabulary
+        that is meaningful to the user" \cite{gilpin2018explaining}. This paper has attempted to
+        show specifically how much care one must take in dealing with bias in data, but more
+        attention is needed in other areas of AI architecture.
     \end{itemize}
 \end{enumerate}
 
