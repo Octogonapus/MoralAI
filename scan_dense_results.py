@@ -79,7 +79,7 @@ def format_name_for_latex(filename: str) -> str:
 
 
 if __name__ == '__main__':
-    test_name = "test 40-60 100-0 0-100"
+    test_name = "test 50-50 50-50 50-50"
     with open("dense results for " + test_name, "r") as f:
         data = f.readlines()
 
