@@ -30,10 +30,10 @@
 \chapter*{Abstract}
 
 Artificial intelligence is being deployed in increasingly autonomous systems where it will have to
-make moral decisions. However, the rapid growth in artificial intelligence is outpacing the
-research in building explainable systems. In this paper, a number of problems around one facet of
-explainable artificial intelligence, training data, are explored. A solution to these problems is
-presented.
+make moral decisions. However, the rapid growth in artificial intelligence is outpacing the research
+in building explainable systems. In this paper, a number of problems around one facet of explainable
+artificial intelligence, training data, are explored. A solution to these problems is presented.
+Additionally, the human decision making process in unavoidable accident scenarios is explored.
 
 \chapter*{Acknowledgements}
 
@@ -66,7 +66,7 @@ presented.
     \cite{aiAndInclusionSymposium}. This symposium illustrates the increasing need to discuss AI
     fairness and inclusivity in a way that non-technical people can understand. One facet of this
     need that this paper addresses is the question of specifically how much one needs to care about
-    possible biases in the stages of AI architecture.
+    possible biases in the various stages of AI architecture.
     
     \item We seek to demonstrate how an AI can learn a bias and empirically determine the severity
     of that bias. Classification accuracy testing will be employed to evaluate the trained AI and
@@ -244,14 +244,47 @@ to produce an average classification accuracy and loss.
 
 \chapter{Findings and Analysis}
 
-\begin{enumerate}
-    \item Our research found that the AI became biased when ...
+\section{Response to Bias}
+
+Our research found that the AI became biased when the training data featured a strong trend not
+present in the test data. For purposes of a control test, a test data set was generated with
+uniformly distributed people and a uniformly distributed jaywalking probability.
+Figure~\ref{fig:test_50-50_50-50_50-50_accuracy_plot} shows the result of this test. In this
+scenario, $P(J)$ is observed to be independent of $P(O_1)$. When $P(J \mid O_1) < 0.1$, the neural
+network classifies dilemmas incorrectly. This trend continues as $P(J \mid O_1)$ decreases, thereby
+increasing the severity of the bias in the training data set. A similar but opposite trend occurs
+when $P(J \mid O_1) > 0.9$.
+
+Observing the contour plot in Figure~\ref{fig:test_40-60_100-0_0-100_accuracy_plot}, one can see
+that classification accuracy decreases abnormally (i.e. differently than in the control in
+Figure~\ref{fig:test_50-50_50-50_50-50_accuracy_plot}) when $P(O_1) > 0.6$ and $P(J \mid O_1) <
+0.2$. In this area, the training data set consists mostly of people in the first option. Most people
+in the first option are not jaywalkers and most people in the second option are. Therefore, the
+training data set is biased to prefer non-jaywalkers because they appear disproportionately
+frequently in the (larger) first option. The neural network, now having learned this trend, is
+tested against a test data set in which most people are in the second option. Those in the first
+option are not jaywalkers and those in the second option are. The network tends to select the first
+option because it contains far fewer jaywalkers than the second option, despite the first option
+being smaller than the second and therefore the incorrect choice. This causes the network's
+classification accuracy to decrease in this region. The trend continues as $P(O_1)$ increases while
+$P(J \mid O_1)$ decreases, thereby increasing the severity of the bias in the training data set.
+Another view into the network's decisions is Figure~\ref{fig:test_40-60_100-0_0-100_jay_prob_plot},
+which shows the real value of $P(J)$ when the network classified a dilemma incorrectly. In the areas
+of the contour plot corresponding to Figure~\ref{fig:test_40-60_100-0_0-100_accuracy_plot}'s areas
+of worst accuracy, we can see that the real value of $P(J)$ is close to zero. In other words, the
+network performs worst when it picks an option because that option is absent of jaywalkers (i.e.
+when the network makes a decision based on the bias it learned rather than the rule used to label
+the test data set). This is further evidence that the network has learned a bias against jaywalkers.
+A similar but opposite trend occurs when $P(O_1) < 0.4$ and $P(J \mid O_1) > 0.8$.
+
+\section{Avoiding Bias}
+
+Our recommendation to avoid biased AI is to format the training data such that ...
     
-    \item Our recommendation to avoid biased AI is to format the training data such that ...
-    
-    \item The survey results were ... and we extrapolate that the thought process behind these moral
-    decisions is ...
-\end{enumerate}
+\section{Survey Results}
+
+The survey results were ... and we extrapolate that the thought process behind these moral decisions
+is ...
 
 \chapter{Conclusion}
 
