@@ -33,7 +33,7 @@ def parse_dense_results(data: str, item: str):
 
         inner_data = []
         for jaywalking_level_result in option_level_result["jaywalking_level_results"]:
-            jaywalking_probability.append(jaywalking_level_result["jaywalking_cpd"][0])
+            jaywalking_probability.append(jaywalking_level_result["jaywalking_cpd"][1])
 
             num_results = len(jaywalking_level_result["results"])
             inner_data.append(
@@ -46,7 +46,7 @@ def parse_dense_results(data: str, item: str):
     return first_option_probability, list(dict.fromkeys(jaywalking_probability)), z_data
 
 
-def generate_plots(data_tuple, title):
+def generate_plots(data_tuple, title, filename=""):
     (x_data, y_data, z_data) = data_tuple
     X, Y = np.meshgrid(np.array(x_data), np.array(y_data))
     Z = np.array(z_data)
@@ -70,13 +70,27 @@ def generate_plots(data_tuple, title):
 
     fig1.show()
 
+    if filename != "":
+        fig1.savefig(filename)
+
+
+def format_name_for_latex(filename: str) -> str:
+    return filename.replace(" ", "_")
+
 
 if __name__ == '__main__':
-    test_name = "test 50-50 50-50 50-50"
+    test_name = "test 40-60 100-0 0-100"
     with open("dense results for " + test_name, "r") as f:
         data = f.readlines()
+
         generate_plots(parse_dense_results(data[0], "accuracy"),
-                       "Classification accuracy against " + test_name)
-        generate_plots(parse_dense_results(data[0], "loss"), "Loss against " + test_name)
+                       "Classification accuracy against " + test_name,
+                       format_name_for_latex("figures/" + test_name + "_accuracy"))
+
+        generate_plots(parse_dense_results(data[0], "loss"),
+                       "Loss against " + test_name,
+                       format_name_for_latex("figures/" + test_name + "_loss"))
+
         generate_plots(parse_dense_results(data[0], "prob_jaywalking_when_wrong"),
-                       "Actual prob of jaywalking when wrong for " + test_name)
+                       "Actual prob of jaywalking when wrong for " + test_name,
+                       format_name_for_latex("figures/" + test_name + "_jay_prob"))
