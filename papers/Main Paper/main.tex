@@ -279,7 +279,36 @@ A similar but opposite trend occurs when $P(O_1) < 0.4$ and $P(J \mid O_1) > 0.8
 
 \section{Avoiding Bias}
 
-Our recommendation to avoid biased AI is to format the training data such that ...
+Three ways for the neural network to learn a bias
+\begin{enumerate}
+    \item Flaws in data
+    \begin{enumerate}
+        \item Any information which is not strictly necessary for the neural network to make
+        effective decisions should not be given to the network
+
+        \item Neural networks used for object detection in images suffer from predictive inequality
+        in detecting people of differing skin tones \cite{wilson2019predictive}. Those with skin
+        tones in the Fitzpatrick range $[1-3]$ are more accurately identified than those with skin
+        tones in the $[4-6]$ range. Furthermore, this problem persists between networks of different
+        architectures. Although the authors of that research propose a different loss function which
+        decreases predictive inequality, one could imagine a totally different architecture which
+        does not use color cameras at all; namely, infrared cameras can not suffer from this class
+        of problem.
+    \end{enumerate}
+    
+    \item Flaws in AI architecture
+    \begin{enumerate}
+        \item This research uses a simple, shallow neural network to reduce architectural
+        complexity. Deeper networks, specifically deep convolutional networks, undoubtedly perform
+        better, but these network architectures suffer from increased design complexity and
+        increased training difficulty \cite{mhaskar2016deep}.
+    \end{enumerate}
+    
+    \item Flaws in testing
+    \begin{enumerate}
+        \item 
+    \end{enumerate}
+\end{enumerate}
     
 \section{Survey Results}
 
