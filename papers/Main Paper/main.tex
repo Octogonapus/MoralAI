@@ -166,46 +166,42 @@ increments, as shown in Table~\ref{tab:example_boolean_attribute_encoding}.
 
 \section{Data Storage}
 
-Data is stored using the JSON format, which was chosen because it is popular and easily
-machine-readable. The purpose of storing the generated data sets is to keep the data consistent
-between test iterations and to share the data. JSON is the chosen data format because it is popular
-and is easily machine-readable. After generation, the training and test data sets are stored in
-JSON-encoded files using \href{https://jsonpickle.github.io/}{jsonpickle}.
+Data is stored using the JSON format using a serialization process called pickling via the Python
+library \href{https://jsonpickle.github.io/}{jsonpickle}. This process was chosen because it
+produces easily machine-readable files and because JSON is a popular data storage format. The
+purpose of storing the generated data sets is to keep the data consistent between test iterations
+and to share the data. Both the training and test data sets are pickled after generation.
 
 \section{Neural Network Model}
 
-The requirements of the neural network used in the experiments are:
-\begin{enumerate}
-    \item The network must classify the training data. In other words, when given a dilemma, the
-    network must classify that dilemma based on which option is most preferable. For example, in a
-    dilemma with two options of three and four people, respectively, the correct classification is
-    the second option because it has more people. In the case where a dilemma has two or more
-    options of equal size, the earlier option is chosen.
-    
-    \item The network must be easy to train, meaning that the time required to train the network
-    must be small (on the order of minutes or less) and the hardware resources required to train the
-    network must be minor. Testing the network requires training it many times, so the time required
-    to train the network must be small. Additionally, the network will be trained on personal
-    machines, so hardware requirements must be easy to meet.
-\end{enumerate}
+There are two primary requirements of the neural network used in the experiments. First, the network
+must classify the training data. In other words, when given a dilemma, the network must classify
+that dilemma based on which option is most preferable. For example, in a dilemma with two options of
+three and four people, respectively, the correct classification is the second option because it has
+more people. In the case where a dilemma has two or more options of equal size, the earlier option
+is chosen.
 
-The final neural network chosen is a simple neural network with one hidden layer trained using
-supervised learning. The alternative models considered are:
-\begin{enumerate}
-    \item An autoencoder. Autoencoders are trained using unsupervised learning, so labeling the data
-    is not necessary (want to avoid imparting a set of morals). This model would perform
-    dimensionality reduction, and perhaps learn to ignore noise (i.e. uniformly distributed
-    attributes) in the data set, but would be unable to classify the dilemmas.
+Second, the network must be easy to train, meaning that the time required to train the network must
+be small (on the order of minutes or less) and the hardware resources required to train the network
+must be minor. Testing the network requires training it many times, so the time required to train
+the network must be small. Additionally, the network will be trained on personal machines, so any
+hardware requirements must be easy to meet.
+
+The final neural network chosen is a simple, shallow, feed-forward network with one hidden layer
+trained using supervised learning \ref{fig:shallow_neural_network}. There are three alternative
+models which were considered. First, an autoencoder. Autoencoders are trained using unsupervised
+learning, so labeling the data is not necessary (want to avoid imparting a set of morals). This
+model would perform dimensionality reduction, and perhaps learn to ignore noise (i.e. uniformly
+distributed attributes) in the data set, but would be unable to classify the dilemmas.
+
+Second, an autoencoder in combination with a simple neural network trained using supervised
+learning. This model solves the classification problem which the previous model failed at, but
+introduced unnecessary complexity to the research. The intent of this research is not to build a
+neural network capable of guiding a real autonomous vehicle.
     
-    \item An autoencoder in combination with a simple neural network trained using supervised
-    learning. This model solves the classification problem which the previous model failed at, but
-    introduced unnecessary complexity to the research. The intent of this research is not to build a
-    neural network capable of guiding a real autonomous vehicle.
-    
-    \item A recurrent neural network (RNN) with long short-term memory (LSTM). This option was
-    considered because RNN's are capable of accepting variable-length sequential data; however, this
-    network does not solve the classification problem, so it is unusable for this research.
-\end{enumerate}
+Lastly, a recurrent neural network (RNN) with long short-term memory (LSTM). This option was
+considered because RNN's are capable of accepting variable-length sequential data; however, this
+network does not solve the classification problem, so it is unusable for this research.
 
 \section{Neural Network Training}
 
@@ -213,8 +209,9 @@ The neural network is modeled and trained using Keras. The input layer has dimen
 the number of attributes per person (after one-hot encoding) multiplied by the number of options per
 dilemma multiplied by the maximum number of people per option. The output layer has dimensionality
 equal to the number of options per dilemma. The hidden layer has dimensionality equal to the average
-of that of the input and output layers. An example implementation can be seen in
-Figure~\ref{fig:code_for_keras_model}.
+of that of the input and output layers. An example implementation in Keras can be seen in
+Figure~\ref{fig:code_for_keras_model}; additionally, Figure~\ref{fig:neural_network_model} provides
+a simple visualization of the dimensionality of the network.
 
 \begin{figure}
     \centering
@@ -380,6 +377,20 @@ is ...
     \includegraphics[scale=1.1]{figures/xai-figure2.png}
     \caption[]{DARPA's XAI Concept~\protect\cite{gunningXAIProgram}}
     \label{fig:darpa_xai}
+\end{figure}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.6]{figures/shallow_neural_network.png}
+    \caption[]{A shallow feed-forward neural network with one hidden layer.}
+    \label{fig:shallow_neural_network}
+\end{figure}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.5]{figures/neural_network_model.png}
+    \caption[]{The dimensions of the neural network used in this research.}
+    \label{fig:neural_network_model}
 \end{figure}
 
 % 
