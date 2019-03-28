@@ -12,8 +12,9 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with MoralAI.  If not, see <https://www.gnu.org/licenses/>.
-
+import getopt
 import json
+import sys
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -57,18 +58,16 @@ def generate_plots(data_tuple, title, filename=""):
     ax = fig1.add_subplot(1, 2, 1)
     contours = ax.contour(X, Y, Z, 9)
     fig1.colorbar(contours, ax=ax)
-    ax.set_xlabel("P(O = first_option)")
-    ax.set_ylabel("P(J | O = first_option)")
+    ax.set_xlabel("$P(O_1)$")
+    ax.set_ylabel("$P(J \\mid O_1)$")
     ax.set_title(" ")  # So the figure title doesn't overlap
 
     ax = fig1.add_subplot(1, 2, 2, projection='3d')
     ax.plot_surface(X, Y, Z, cmap=cm.coolwarm)
     ax.view_init(25, -35)
-    ax.set_xlabel("P(O = first_option)")
-    ax.set_ylabel("P(J | O = first_option)")
+    ax.set_xlabel("$P(O_1)$")
+    ax.set_ylabel("$P(J \\mid O_1)$")
     ax.set_title(" ")  # So the figure title doesn't overlap
-
-    fig1.show()
 
     if filename != "":
         fig1.savefig(filename)
@@ -78,19 +77,54 @@ def format_name_for_latex(filename: str) -> str:
     return filename.replace(" ", "_")
 
 
-if __name__ == '__main__':
-    test_name = "test 50-50 50-50 50-50"
+def make_figure(test_name: str, data_series: str, title: str, filename_suffix: str):
+    plt.rc('text', usetex=True)
+
     with open("dense results for " + test_name, "r") as f:
         data = f.readlines()
+        generate_plots(parse_dense_results(data[0], data_series),
+                       title + test_name,
+                       format_name_for_latex("figures/" + test_name + filename_suffix))
 
-        generate_plots(parse_dense_results(data[0], "accuracy"),
-                       "Classification accuracy against " + test_name,
-                       format_name_for_latex("figures/" + test_name + "_accuracy"))
 
-        generate_plots(parse_dense_results(data[0], "loss"),
-                       "Loss against " + test_name,
-                       format_name_for_latex("figures/" + test_name + "_loss"))
+def main(argv):
+    try:
+        opts, args = getopt.getopt(argv, "",
+                                   ["test-data=", "data-series=", "title=", "file-suffix="])
+    except getopt.GetoptError:
+        print("Usage: scan_dense_results.py --test-data <test data name> "
+              "--data-series <data series name> --title <title> --type <filename suffix>")
+        sys.exit(2)
 
-        generate_plots(parse_dense_results(data[0], "prob_jaywalking_when_wrong"),
-                       "Actual prob of jaywalking when wrong for " + test_name,
-                       format_name_for_latex("figures/" + test_name + "_jay_prob"))
+    test_name = None
+    data_series = None
+    title = None
+    filename_suffix = None
+    for opt, arg in opts:
+        if opt == "--test-data":
+            test_name = arg
+        elif opt == "--data-series":
+            data_series = arg
+        elif opt == "--title":
+            title = arg
+        elif opt == "--file-suffix":
+            filename_suffix = arg
+
+    if test_name is None:
+        print("--test-data argument required")
+        sys.exit(2)
+    elif data_series is None:
+        print("--data-series argument required")
+        sys.exit(2)
+    elif title is None:
+        print("--title argument required")
+        sys.exit(2)
+    elif filename_suffix is None:
+        print("--file-suffix argument required")
+        sys.exit(2)
+
+    make_figure(test_name, data_series, title, filename_suffix)
+
+
+if __name__ == '__main__':
+    main(sys.argv[1:])
