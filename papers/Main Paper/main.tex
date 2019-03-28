@@ -284,7 +284,7 @@ Three ways for the neural network to learn a bias
     \item Flaws in data
     \begin{enumerate}
         \item Any information which is not strictly necessary for the neural network to make
-        effective decisions should not be given to the network
+        effective decisions should not be given to the network.
 
         \item Neural networks used for object detection in images suffer from predictive inequality
         in detecting people of differing skin tones \cite{wilson2019predictive}. Those with skin
@@ -306,7 +306,26 @@ Three ways for the neural network to learn a bias
     
     \item Flaws in testing
     \begin{enumerate}
-        \item 
+        \item If one is concerned that a system may be less able to measure some attribute in a
+        certain environment, then the testing for the system may want to overrepresent that
+        attribute.
+
+        \item If a system should be equally sensitive to all of its inputs, then those input should
+        be represented equally during testing, even if a different distribution of inputs is
+        expected to be encountered when the system is deployed. In the case of autonomous vehicles,
+        this research assumed the neural network should treat all people equally, but in reality
+        this is a region-specific measure. The Moral Machine experiment measured strong regional
+        preferences for various aspects of decision-making during unavoidable accident scenarios
+        \cite{awad2018moral}. For example, Eastern countries showed an almost nonexistent preference
+        for sparing the young compared to Western and Southern countries. Southern countries showed
+        a strong preference for sparing females compared to Western and Eastern countries. Not all
+        regional preferences can be reliably accounted for, however. Some preferences, such as the
+        Eastern countries stronger preference for sparing the lawful compared to Western and
+        Southern countries, is not entirely enforceable by AI systems. Some instances of lawfulness
+        classification could be reliable, such as detecting jaywalkers, but others, such as
+        detecting unlawful intoxication, are most likely difficult. There is, of course, the
+        question of whether or not autonomous vehicles should contain any regional preferences or
+        whether they should be totally fair; however, that is outside the scope of this paper.
     \end{enumerate}
 \end{enumerate}
     
