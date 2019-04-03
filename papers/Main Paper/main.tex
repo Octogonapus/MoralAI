@@ -77,6 +77,8 @@ Additionally, the human decision making process in unavoidable accident scenario
     \item We also seek to understand the decision making process in humans behind making moral
     decisions in unavoidable accident scenarios, i.e. dilemmas. This part of the research will be
     done by surveying a group of people and performing qualitative analysis on the survey results.
+    These results serve not only as a way to understand this decision making process but also as a
+    language we can use to craft communications with the symposium audience mentioned previously.
 \end{enumerate}
 
 \FloatBarrier
@@ -89,7 +91,7 @@ Additionally, the human decision making process in unavoidable accident scenario
     \begin{itemize}
         \item \cite{bojarski2016end} performs end-to-end learning which "map raw pixels from a
         single front-facing camera directly to steering commands". With this approach, the AI will
-        have to directly respond to pedestrians and other external stimuli.
+        have to respond directly to pedestrians and other external stimuli.
     \end{itemize}
     
     \item The Moral Machine experiment~\cite{awad2018moral} is prior research into people's
@@ -114,12 +116,12 @@ people in the first option could be more likely to jaywalk then people in the se
 producing a data set which is biased towards/against jaywalkers. When combined with control over the
 number of people in each option, this method can produce both subtle and strong bias. The code for
 the domain of each attribute of a person is in Figure~\ref{fig:code_for_person_attribute_domains}.
-\href{https://github.com/pgmpy/pgmpy}{pgmpy} is used to create the graphical model and infer each
-variable’s probability distribution. These distributions are then used to pick elements from each
-variable’s domain. This process is repeated for each attribute of each person and for the num- ber
-of people in each option of a dilemma, forming a complete dilemma. The number of dilemmas generated
-is specified programmatically using the \code{TrainMetadata} class, which captures the number of
-dilemmas to generate and the maximum number of people per option.
+The Python package \href{https://github.com/pgmpy/pgmpy}{pgmpy} is used to create the graphical
+model and infer each variable’s probability distribution. These distributions are then used to pick
+elements from each variable’s domain. This process is repeated for each attribute of each person and
+for the num ber of people in each option of a dilemma, forming a complete dilemma. The number of
+dilemmas generated is specified programmatically using the \code{TrainMetadata} class, which
+captures the number of dilemmas to generate and the maximum number of people per option.
 
 \begin{figure}[h]
     \centering
@@ -137,6 +139,7 @@ dilemmas to generate and the maximum number of people per option.
 
 \FloatBarrier
 \section{Data Bracketing}
+\label{sec:data-bracketing}
 
 Attributes are one-hot encoded so the neural network is resilient to unspecified attributes. Age is
 bracketed by increments of 10 years. Some example encoded ages are shown in
@@ -183,10 +186,10 @@ and to share the data. Both the training and test data sets are pickled after ge
 
 There are two primary requirements of the neural network used in the experiments. First, the network
 must classify the training data. In other words, when given a dilemma, the network must classify
-that dilemma based on which option is most preferable. For example, in a dilemma with two options of
-three and four people, respectively, the correct classification is the second option because it has
-more people. In the case where a dilemma has two or more options of equal size, the earlier option
-is chosen.
+that dilemma by picking which option to avoid. For example, in a dilemma with two options of three
+and four people, respectively, the correct classification is the second option because it allows the
+autonomous vehicle to save more people. In the case where a dilemma has two or more options of equal
+size, the earlier option is chosen.
 
 Second, the network must be easy to train, meaning that the time required to train the network must
 be small (on the order of minutes or less) and the hardware resources required to train the network
@@ -194,33 +197,32 @@ must be minor. Testing the network requires training it many times, so the time 
 the network must be small. Additionally, the network will be trained on personal machines, so any
 hardware requirements must be easy to meet.
 
-The final neural network chosen is a simple, shallow, feed-forward network with one hidden layer
-trained using supervised learning \ref{fig:shallow_neural_network}. There are three alternative
-models which were considered. First, an autoencoder. Autoencoders are trained using unsupervised
-learning, so labeling the data is not necessary (want to avoid imparting a set of morals). This
-model would perform dimensionality reduction, and perhaps learn to ignore noise (i.e. uniformly
-distributed attributes) in the data set, but would be unable to classify the dilemmas.
+There are three models which were considered when deciding on what network to use. First, an
+autoencoder: autoencoders are trained using unsupervised learning, so labeling the data is not
+necessary (want to avoid imparting a set of morals). This model would perform dimensionality
+reduction, and perhaps learn to ignore noise (i.e. uniformly distributed attributes) in the data
+set, but would be unable to classify the dilemmas.
 
 Second, an autoencoder in combination with a simple neural network trained using supervised
-learning. This model solves the classification problem which the previous model failed at, but
-introduced unnecessary complexity to the research. The intent of this research is not to build a
-neural network capable of guiding a real autonomous vehicle.
-    
+learning: this model solves the classification problem which the previous model failed at, but
+introduces unnecessary complexity to the research. The intent of this research is not to build a
+neural network capable of guiding a real autonomous vehicle, so this model was deemed unnecessarily
+complex.
+
 Lastly, a recurrent neural network (RNN) with long short-term memory (LSTM). This option was
-considered because RNN's are capable of accepting variable-length sequential data; however, this
-network does not solve the classification problem, so it is unusable for this research.
+considered because RNN's are capable of accepting variable-length sequential data. We thought the
+network may need to handle variable-length data, but the engineering challenge that design posed was
+traded in favor of both limiting the maximum number of people in an option and bracketing the data
+as covered in section~\ref{sec:data-bracketing}. Additionally, this network does not directly solve
+the classification problem, so it is only marginally applicable for this research.
 
-\FloatBarrier
-\section{Neural Network Training}
-
-The neural network is modeled and trained using Keras. The input layer has dimensionality equal to
-the number of attributes per person (after one-hot encoding) multiplied by the number of options per
-dilemma multiplied by the maximum number of people per option. The output layer has dimensionality
-equal to the number of options per dilemma. The hidden layer has dimensionality equal to the average
-of that of the input and output layers. The network was trained with $5$ epochs and a batch size of
-$32$. An example implementation in Keras can be seen in Figure~\ref{fig:code_for_keras_model};
-additionally, Figure~\ref{fig:neural_network_model} provides a simple visualization of the
-dimensionality of the network.
+The final neural network chosen is a simple, shallow, feed-forward network with one hidden layer
+trained using supervised learning, pictured in Figure~\ref{fig:shallow_neural_network}. The input
+layer has dimensionality equal to the number of attributes per person (after one-hot encoding)
+multiplied by the number of options per dilemma multiplied by the maximum number of people per
+option. The output layer has dimensionality equal to the number of options per dilemma. The hidden
+layer has dimensionality equal to the average of that of the input and output layers. An example
+implementation in Keras of the model can be seen in Figure~\ref{fig:code_for_model}.
 
 \begin{figure}[h]
     \centering
@@ -242,18 +244,44 @@ dimensionality of the network.
     model.fit(train_data, train_labels, epochs=5, batch_size=32)
     \end{verbatim}
     \caption{The Keras code for the neural network model.}
-    \label{fig:code_for_keras_model}
+    \label{fig:code_for_model}
+\end{figure}
+
+\FloatBarrier
+\section{Neural Network Training}
+
+The training data given to the network is one-hot encoded, so the categorical cross entropy loss
+function is used. As the network is quite simple, a stochastic gradient descent optimizer suffices.
+Training happens over $5$ epochs with a batch size of $32$. An example implementation in Keras can
+be seen in Figure~\ref{fig:code_for_training}; additionally, Figure~\ref{fig:neural_network_model}
+provides a simple visualization of the dimensionality of the network.
+
+\begin{figure}[h]
+    \centering
+    \begin{verbatim}
+    model.compile(loss=losses.categorical_crossentropy,
+                  optimizer='sgd',
+                  metrics=[metrics.categorical_accuracy])
+    
+    model.fit(train_data, train_labels, epochs=5, batch_size=32)
+    \end{verbatim}
+    \caption{The Keras code for the neural network model.}
+    \label{fig:code_for_training}
 \end{figure}
 
 \FloatBarrier
 \section{Neural Network Testing}
 
 The neural network is tested using Keras to evaluate the classification accuracy and loss against a
-test data set. The test data is generated in the same way as the training data, though typically
-with less or no bias. Each training data set is tested five times. Each iteration involves training
-the neural network on the training data set and evaluating its performance against a test data set
-to collect classification accuracy and loss information. The results of all five runs are averaged
-to produce an average classification accuracy and loss.
+test data set. The test data is generated using a graphical model in the same manner as the training
+data; however, it is important to note that in this step, the test data is generated separately from
+the training data: it is not a sampled subset of the training data. Each training data set is tested
+five times. Each iteration involves training the neural network on the training data set and
+evaluating its performance against a test data set to collect classification accuracy and loss
+information. The results of all five iterations are averaged to produce an average classification
+accuracy and loss. Many training data sets are generated and tested against the same test data set.
+Each data point in Figure~\ref{fig:test_40-60_100-0_0-100_accuracy_plot} corresponds to a unique
+training data set. All data points in the figure are tested against the same test data set.
 
 The test result naming format, seen, for example, in the caption of
 Figure~\ref{fig:test_40-60_100-0_0-100_accuracy_plot}, reproduced here in
@@ -303,7 +331,7 @@ Another view into the network's decisions is Figure~\ref{fig:test_40-60_100-0_0-
 which shows the real value of $P(J)$ when the network classified a dilemma incorrectly. In the areas
 of the contour plot corresponding to Figure~\ref{fig:test_40-60_100-0_0-100_accuracy_plot}'s areas
 of worst accuracy, we can see that the real value of $P(J)$ is close to zero. In other words, the
-network performs worst when it picks an option because that option is absent of jaywalkers (i.e.
+network performs worst when it picks an option because that option is absent of jaywalkers (i.e.,
 when the network makes a decision based on the bias it learned rather than the rule used to label
 the test data set). This is further evidence that the network has learned a bias against jaywalkers.
 A similar but opposite trend occurs when $P(O_1) < 0.4$ and $P(J \mid O_1) > 0.8$.
@@ -371,6 +399,55 @@ Three ways for the neural network to learn a bias
 
 The survey results were ... and we extrapolate that the thought process behind these moral decisions
 is ...
+
+We found several themes in the survey responses
+\begin{itemize}
+    \item Humans can be flawed
+    \begin{itemize}
+        \item Humans can have bias.
+        \item Flaws in humans can lead to flaws in AI systems design and in data sets.
+    \end{itemize}
+    
+    \item Data can be flawed
+    \begin{itemize}
+        \item AI systems trained on flawed data will be flawed themselves.
+    \end{itemize}
+    
+    \item Value saving more lives over fewer
+    \begin{itemize}
+        \item This is consistent with one of the Moral Machine experiment's
+        findings~\cite{awad2018moral}.
+    \end{itemize}
+    
+    \item Unwillingness to kill
+    \begin{itemize}
+        \item Killing is unjustifiable; therefore, an action that causes a greater number of people
+        to be spared is not necessarily desirable.
+        \item If there is an option with a chance that people might not die, that option is vastly
+        more desirable than an option containing one person who will certainly be killed.
+    \end{itemize}
+    
+    \item Demand for testing
+    \begin{itemize}
+        \item Because both humans and data can be flawed, testing must be employed to validate the
+        fairness of the AI system.
+        \item These tests must have great breadth and cover many scenarios and peoples.
+        \item The data used for training and testing should be transparent.
+        \item The methods of testing should be transparent.
+        \item Good testing methodologies and good results can lead to trust in AI systems.
+    \end{itemize}
+\end{itemize}
+
+People can be flawed. This can be addressed with architectural approaches to AI system design.
+
+Data can be flawed. This can be addressed with sensitivity studies.
+
+An AI system operating an autonomous vehicle is in control at all times.
+\begin{itemize}
+    \item The system must decide what to do in a dilemma.
+    \item There is no inaction: choosing inaction is equivalent to choosing an action with the same
+    result as inaction.
+\end{itemize}
 
 \FloatBarrier
 \chapter{Conclusion}
