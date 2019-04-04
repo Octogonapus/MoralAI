@@ -78,7 +78,7 @@ Additionally, the human decision making process in unavoidable accident scenario
     decisions in unavoidable accident scenarios, i.e. dilemmas. This part of the research will be
     done by surveying a group of people and performing qualitative analysis on the survey results.
     These results serve not only as a way to understand this decision making process but also as a
-    language we can use to craft communications with the symposium audience mentioned previously.
+    language and structure we can use to craft communications with less-technical people.
 \end{enumerate}
 
 \FloatBarrier
@@ -89,7 +89,7 @@ Additionally, the human decision making process in unavoidable accident scenario
     
     \item Cite examples of AI that must (or will in the near future) make moral decisions.
     \begin{itemize}
-        \item \cite{bojarski2016end} performs end-to-end learning which "map raw pixels from a
+        \item \cite{bojarski2016end} performs end-to-end learning which "[maps] raw pixels from a
         single front-facing camera directly to steering commands". With this approach, the AI will
         have to respond directly to pedestrians and other external stimuli.
     \end{itemize}
@@ -97,11 +97,11 @@ Additionally, the human decision making process in unavoidable accident scenario
     \item The Moral Machine experiment~\cite{awad2018moral} is prior research into people's
     preferences in moral dilemmas. Participants are shown a moral dilemma involving an autonomous
     vehicle, passengers, and pedestrians. In each dilemma, the participant must choose between
-    inaction, which results in the certain death of the pedestrians, and action, which results in
-    certain death of the passengers. The study revealed three strong global preferences towards
-    sparing humans over animals, sparing more lives rather than fewer, and sparing younger lives
-    rather than older. The study also showed that some preferences vary between countries depending
-    on that country's propensity towards egalitarianism.
+    inaction, which typically results in the certain death of the pedestrians, and action, which
+    typically results in the certain death of the passengers. The study revealed three strong global
+    preferences towards sparing humans over animals, sparing more lives rather than fewer, and
+    sparing younger lives rather than older. The study also showed that some preferences vary
+    between countries depending on that country's propensity towards egalitarianism.
 \end{enumerate}
 
 \FloatBarrier
@@ -112,11 +112,11 @@ Additionally, the human decision making process in unavoidable accident scenario
 The data is generated using a graphical model to control the conditional probabilities for the
 states of each variable. The variables in the model correspond directly to the attributes of a
 person. Figure~\ref{fig:graphical_model_image} is a rendering of the graphical model. For example,
-people in the first option could be more likely to jaywalk then people in the second option,
+people in the first option could be more likely to jaywalk than people in the second option,
 producing a data set which is biased towards/against jaywalkers. When combined with control over the
 number of people in each option, this method can produce both subtle and strong bias. The code for
 the domain of each attribute of a person is in Figure~\ref{fig:code_for_person_attribute_domains}.
-The Python package \href{https://github.com/pgmpy/pgmpy}{pgmpy} is used to create the graphical
+The Python library \href{https://github.com/pgmpy/pgmpy}{pgmpy} is used to create the graphical
 model and infer each variable’s probability distribution. These distributions are then used to pick
 elements from each variable’s domain. This process is repeated for each attribute of each person and
 for the num ber of people in each option of a dilemma, forming a complete dilemma. The number of
@@ -236,12 +236,6 @@ implementation in Keras of the model can be seen in Figure~\ref{fig:code_for_mod
     model.add(Dense(units=round((input_dim + output_dim) / 2),
                 activation='relu'))
     model.add(Dense(units=output_dim, activation='softmax'))
-
-    model.compile(loss=losses.categorical_crossentropy,
-                  optimizer='sgd',
-                  metrics=[metrics.categorical_accuracy])
-    
-    model.fit(train_data, train_labels, epochs=5, batch_size=32)
     \end{verbatim}
     \caption{The Keras code for the neural network model.}
     \label{fig:code_for_model}
@@ -286,12 +280,12 @@ training data set. All data points in the figure are tested against the same tes
 The test result naming format, seen, for example, in the caption of
 Figure~\ref{fig:test_40-60_100-0_0-100_accuracy_plot}, reproduced here in
 Figure~\ref{fig:test_result_naming_example}, contains all the information necessary to understand
-the characteristics of the test data set. The name can be split into three sections. First, 40-60
+the characteristics of the test data set. The name can be split into three sections. First, "40-60"
 refers to the probability distribution of people among the two options: $P(O_1) = 0.4$, $P(O_2) =
-0.6$. Second, 100-0 refers to the probability distribution of jaywalking for those in the first
-option. $P(\neg J \mid O_1) = 1$, $P(J \mid O_1) = 0$. Finally, 0-100 refers to the probability
-distribution of jaywalking for those in the second option. $P(\neg J \mid O_2) = 0$, $P(J \mid O_2)
-= 1$.
+0.6$ (and for any dilemma with two options, $P(O_2) = P(\neg O_1)$). Second, "100-0" refers to the
+probability distribution of jaywalking for those in the first option. $P(\neg J \mid O_1) = 1$, $P(J
+\mid O_1) = 0$. Finally, "0-100" refers to the probability distribution of jaywalking for those in
+the second option. $P(\neg J \mid O_2) = 0$, $P(J \mid O_2) = 1$.
 
 \begin{figure}[h]
     \centering
@@ -344,17 +338,10 @@ Three ways for the neural network to learn a bias
     \item Flaws in data
     \begin{enumerate}
         \item Any information which is not strictly necessary for the neural network to make
-        effective decisions should not be given to the network. <Maybe talk about restriction layer
-        and that architecture?>
-
-        \item Neural networks used for object detection in images suffer from predictive inequality
-        in detecting people of differing skin tones~\cite{wilson2019predictive}. Those with skin
-        tones in the Fitzpatrick range $[1, 3]$ are more accurately identified than those with skin
-        tones in the $[4, 6]$ range. Furthermore, this problem persists between networks of
-        different architectures. Although the authors of that research propose a different loss
-        function which decreases predictive inequality, one could imagine a totally different system
-        which does not use color cameras at all. Infrared cameras may serve as a good replacement
-        because they do not sense skin tones.
+        effective decisions should not be given to the network. This especially affects end-to-end
+        networks such as the convolutional neural network in~\cite{bojarski2016end} because these
+        systems have an enormous variety of (sometimes) unfiltered data given to them. This approach
+        can increase the risk of the neural network learning a bias.
     \end{enumerate}
     
     \item Flaws in AI architecture
@@ -363,6 +350,16 @@ Three ways for the neural network to learn a bias
         complexity. Deeper networks, specifically deep convolutional networks, undoubtedly perform
         better, but these network architectures suffer from increased design complexity and
         increased training difficulty~\cite{mhaskar2016deep}.
+
+        \item Neural networks used for image-based object detection suffer from predictive
+        inequality in detecting people of differing skin tones~\cite{wilson2019predictive}. Those
+        with skin tones in the Fitzpatrick range $[1, 3]$ are more accurately identified than those
+        with skin tones in the $[4, 6]$ range. Furthermore, this problem persists between networks
+        of different architectures. Although the authors of that research propose a different loss
+        function which decreases predictive inequality, one could imagine a totally different system
+        which does not use color cameras at all. Infrared cameras may serve as a good replacement
+        because they produce images which are easier to filter with traditional computer vision
+        techniques than full color images are.
     \end{enumerate}
     
     \item Flaws in testing
@@ -379,18 +376,17 @@ Three ways for the neural network to learn a bias
         expected to be encountered when the system is deployed. In the case of autonomous vehicles,
         this research assumed the neural network should treat all people equally, but in reality
         this is a region-specific measure. The Moral Machine experiment measured strong regional
-        preferences for various aspects of decision-making during unavoidable accident
-        scenarios~\cite{awad2018moral}. For example, Eastern countries showed an almost nonexistent
-        preference for sparing the young compared to Western and Southern countries. Southern
-        countries showed a strong preference for sparing females compared to Western and Eastern
-        countries. Not all regional preferences can be reliably accounted for, however. Some
-        preferences, such as the Eastern countries stronger preference for sparing the lawful
-        compared to Western and Southern countries, is not entirely enforceable by AI systems. Some
-        instances of lawfulness classification could be reliable, such as detecting jaywalkers, but
-        others, such as detecting unlawful intoxication, are most likely difficult. There is, of
-        course, the question of whether or not autonomous vehicles should contain any regional
-        preferences or whether they should be totally fair; however, that is outside the scope of
-        this paper.
+        preferences for various aspects of decision-making during dilemmas~\cite{awad2018moral}. For
+        example, Eastern countries showed an almost nonexistent preference for sparing the young
+        compared to Western and Southern countries. Southern countries showed a strong preference
+        for sparing females compared to Western and Eastern countries. Not all regional preferences
+        can be reliably accounted for, however. Some preferences, such as the Eastern countries
+        stronger preference for sparing the lawful compared to Western and Southern countries, is
+        not entirely enforceable by AI systems. Some instances of lawfulness classification could be
+        reliable, such as detecting jaywalkers, but others, such as detecting unlawful intoxication,
+        are most likely difficult. There is, of course, the question of whether or not autonomous
+        vehicles should contain any regional preferences or whether they should be totally fair;
+        however, that is outside the scope of this paper.
     \end{enumerate}
 \end{enumerate}
     
@@ -410,7 +406,7 @@ We found several themes in the survey responses
     
     \item Data can be flawed
     \begin{itemize}
-        \item AI systems trained on flawed data will be flawed themselves.
+        \item AI systems trained on flawed data will show flawed performance.
     \end{itemize}
     
     \item Value saving more lives over fewer
@@ -421,36 +417,43 @@ We found several themes in the survey responses
     
     \item Unwillingness to kill
     \begin{itemize}
-        \item Killing is unjustifiable; therefore, an action that causes a greater number of people
-        to be spared is not necessarily desirable.
-        \item If there is an option with a chance that people might not die, that option is vastly
-        more desirable than an option containing one person who will certainly be killed.
+        \item Killing is generally unjustifiable; therefore, an action that causes a greater number
+        of people to be spared is not necessarily desirable.
+        \item If there is an option with a chance that people might not die, that option is more
+        desirable than an option containing one person who will certainly be killed, despite the
+        prior option containing more people.
     \end{itemize}
     
     \item Demand for testing
     \begin{itemize}
         \item Because both humans and data can be flawed, testing must be employed to validate the
         fairness of the AI system.
-        \item These tests must have great breadth and cover many scenarios and peoples.
+        \item These tests must have great breadth and cover many scenarios and people, especially
+        minorities.
         \item The data used for training and testing should be transparent.
         \item The methods of testing should be transparent.
         \item Good testing methodologies and good results can lead to trust in AI systems.
     \end{itemize}
 \end{itemize}
 
-People can be flawed. This can be addressed with architectural approaches to AI system design.
-
-Data can be flawed. This can be addressed with sensitivity studies.
-
-An AI system operating an autonomous vehicle is in control at all times.
+How to address these concerns
 \begin{itemize}
-    \item The system must decide what to do in a dilemma.
-    \item There is no inaction: choosing inaction is equivalent to choosing an action with the same
-    result as inaction.
+    \item People can be flawed.
+    \begin{itemize}
+        \item This can be addressed with architectural approaches to AI system design.
+        \item Something something restriction layer...
+    \end{itemize}
+    
+    \item Data can be flawed.
+    \begin{itemize}
+        \item This can be addressed with sensitivity studies. This research provides a format to
+        determine an AI system's sensitivity to flawed data.
+    \end{itemize}
 \end{itemize}
 
 \FloatBarrier
-\chapter{Conclusion}
+\chapter{Conclusion and Future Work}
+\section{Conclusion}
 
 \begin{enumerate}
     \item Our research found that AI becomes biased when ?. Therefore, one must take a certain
@@ -477,6 +480,37 @@ An AI system operating an autonomous vehicle is in control at all times.
         attention is needed in other areas of AI architecture.
     \end{itemize}
 \end{enumerate}
+
+\FloatBarrier
+\section{Future Work}
+
+\begin{itemize}
+    \item An AI system operating an autonomous vehicle is in control at all times.
+    \begin{itemize}
+        \item The system must decide what to do in a dilemma. There is no inaction: choosing
+        inaction is equivalent to choosing an action with the same result as inaction. Therefore,
+        the system must be programmed, either explicitly through traditional techniques or
+        implicitly through machine learning, to respond a specific way in a dilemma. Not all
+        end-users may find the system's programming ethically acceptable.
+
+        \item Some survey respondents expressed interest in a "personal AI" solution in which the
+        end-user of an autonomous vehicle can input their preferences to modify how the AI will
+        react in a dilemma.
+        
+        \item A personal AI system brings with it a number of ethical questions
+        \begin{itemize}
+            \item What parameters should be tunable? Certainly the end-user should not be able to
+            tell the AI to prefer one race over another.
+            \item Should the set of tunable parameters be regulated such that all autonomous
+            vehicles are required to have the same set of tunable parameters?
+            \item How liable is the autonomous vehicle manufacturer and any other parties involved
+            in training/testing the AI system?
+            \item How liable is the end-user in tuning their autonomous vehicle (perhaps a tuning
+            decision they made caused greater personal injury than if they had chosen a different
+            option).
+        \end{itemize}
+    \end{itemize}
+\end{itemize}
 
 \bibliography{citations}
 \bibliographystyle{plain}
