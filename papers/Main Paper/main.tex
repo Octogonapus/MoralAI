@@ -16,7 +16,7 @@
     {\includegraphics[height=2in]{figures/WPI_Inst_Prim_FulClr.png}}
 }
 \author{Ryan Benasutti}
-\date{March 2019}
+\date{April 2019}
 
 \newcommand{\code}{\texttt}
 
@@ -33,8 +33,9 @@
 Artificial intelligence is being deployed in increasingly autonomous systems where it will have to
 make moral decisions. However, the rapid growth in artificial intelligence is outpacing the research
 in building explainable systems. In this paper, a number of problems around one facet of explainable
-artificial intelligence, training data, are explored. A solution to these problems is presented.
-Additionally, the human decision-making process in unavoidable accident scenarios is explored.
+artificial intelligence, training data, is explored. A solution to these problems is presented.
+Additionally, the human decision-making process in unavoidable accident scenarios is explored
+through qualitative analysis of survey results.
 
 \chapter*{Acknowledgements}
 
@@ -52,7 +53,7 @@ Additionally, the human decision-making process in unavoidable accident scenario
 \begin{enumerate}
     \item Autonomous vehicle technology is growing rapidly and AI is a key piece of that technology.
     As this technology gets closer to attaining full autonomy, the AI deployed in these systems will
-    have greater responsibility than ever. These AI systems must be explainably fair, i.e. they must
+    have greater responsibility than ever. These AI systems must be explainably fair, i.e., they must
     both make decisions using only the least amount of information necessary for optimal performance
     and make those decisions predictably and correctly. For example, the AI in an autonomous vehicle
     does not need to be supplied with information about a pedestrian's race, even though race may be
@@ -82,7 +83,7 @@ Additionally, the human decision-making process in unavoidable accident scenario
     determine if any bias was learned, and, if so, the severity of that bias.
 
     \item We also seek to understand the decision-making process in humans behind making moral
-    decisions in unavoidable accident scenarios, i.e. dilemmas. This part of the research will be
+    decisions in unavoidable accident scenarios, i.e., dilemmas. This part of the research will be
     done by surveying a group of people and performing qualitative analysis on the survey results.
     These results serve not only as a way to understand this decision-making process but also as a
     language and structure we can use to craft communications with less-technical people.
@@ -155,10 +156,10 @@ captures the number of dilemmas to generate and the maximum number of people per
 \section{Data Bracketing}
 \label{sec:data-bracketing}
 
-Attributes are one-hot encoded so the neural network is resilient to unspecified attributes. Age is
-bracketed by increments of 10 years. Some example encoded ages are shown in
-Table~\ref{tab:example_age_attribute_encoding}. Boolean attributes are encoded into three
-increments, as shown in Table~\ref{tab:example_boolean_attribute_encoding}.
+Attributes are one-hot encoded (i.e., mapped using an indicator function) so the neural network is
+resilient to unspecified attributes. Age is bracketed by increments of 10 years. Some example
+encoded ages are shown in Table~\ref{tab:example_age_attribute_encoding}. Boolean attributes are
+encoded into three increments, as shown in Table~\ref{tab:example_boolean_attribute_encoding}.
     
 \begin{table}[h]
     \centering
@@ -214,7 +215,7 @@ hardware requirements must be easy to meet.
 There are three models which were considered when deciding on what network to use. First, an
 autoencoder: autoencoders are trained using unsupervised learning, so labeling the data is not
 necessary (want to avoid imparting a set of morals). This model would perform dimensionality
-reduction, and perhaps learn to ignore noise (i.e. uniformly distributed attributes) in the data
+reduction, and perhaps learn to ignore noise (i.e., uniformly distributed attributes) in the data
 set, but would be unable to classify the dilemmas.
 
 Second, an autoencoder in combination with a simple neural network trained using supervised
@@ -265,7 +266,7 @@ implementation in Keras of the model can be seen in Figure~\ref{fig:code_for_mod
 \FloatBarrier
 \section{Neural Network Training}
 
-The training data given to the network is one-hot encoded, so the categorical cross entropy loss
+The training data given to the network is categorical, so the categorical cross entropy loss
 function is used. As the network is quite simple, a stochastic gradient descent optimizer suffices.
 Training happens over $5$ epochs with a batch size of $32$. An example implementation in Keras can
 be seen in Figure~\ref{fig:code_for_training}; additionally, Figure~\ref{fig:neural_network_model}
@@ -323,6 +324,25 @@ the second option. $P(\neg J \mid O_2) = 0$, $P(J \mid O_2) = 1$.
 \end{figure}
 
 \FloatBarrier
+\section{Survey}
+
+A group of primarily engineering-focused undergraduate college students was surveyed. These students
+were in attendance of an introductory ethics course, so their responses are likely more ethically
+sensitive than those of an average individual. The responses discussed later are still useful in
+crafting communications with those outside of AI research, but might not extend as easily toward the
+general public. Participation in the survey was voluntary and each question in the survey was
+optional. The survey question are:
+\begin{enumerate}
+    \item If you had to choose between two accident scenarios, one in which a single person would
+    certainly be killed, and the other which some number of people, a cluster of people, might be
+    able to escape, how many people would that cluster have to contain (could be infinite), before
+    you would choose the single person scenario?
+    \item Please describe thoughts that went through your mind as you weighed the choice above.
+    \item Would you trust AI to be race-blind if it were tested for not having racial bias?
+    \item What would you need to know about the test, to feel protected against race-bias in AI?
+\end{enumerate}
+
+\FloatBarrier
 \chapter{Findings and Analysis}
 
 \section{Response to Bias}
@@ -337,7 +357,7 @@ increasing the severity of the bias in the training data set. A similar but oppo
 when $P(J \mid O_1) > 0.9$.
 
 Observing the contour plot in Figure~\ref{fig:test_40-60_100-0_0-100_accuracy_plot}, one can see
-that classification accuracy decreases abnormally (i.e. differently than in the control in
+that classification accuracy decreases abnormally (i.e., differently than in the control in
 Figure~\ref{fig:test_50-50_50-50_50-50_accuracy_plot}) when $P(O_1) > 0.6$ and $P(J \mid O_1) <
 0.2$. In this area, the training data set consists mostly of people in the first option. Most people
 in the first option are not jaywalkers and most people in the second option are. Therefore, the
@@ -421,9 +441,9 @@ Three ways for the neural network to learn a bias
 \FloatBarrier
 \section{Survey Results}
 
-We found several themes in the survey responses. These themes are summarized in
-Figure~\ref{fig:survey_analysis}.
-\begin{itemize}
+Thirty-five survey responses were collected. We found several themes in these responses, which are
+summarized in Figure~\ref{fig:survey_analysis} and explained in greater detail here:
+\begin{enumerate}
     \item Humans can be flawed
     \begin{itemize}
         \item Humans can have bias.
@@ -460,7 +480,7 @@ Figure~\ref{fig:survey_analysis}.
         \item The methods of testing should be transparent.
         \item Good testing methodologies and good results can lead to trust in AI systems.
     \end{itemize}
-\end{itemize}
+\end{enumerate}
 
 How to address these concerns
 \begin{itemize}
