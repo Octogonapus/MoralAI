@@ -1,4 +1,4 @@
-\documentclass{report}
+\documentclass[]{report}
 \usepackage[utf8]{inputenc}
 \usepackage{hyperref}
 \usepackage{amsmath}
@@ -33,9 +33,9 @@
 Artificial intelligence is being deployed in increasingly autonomous systems where it will have to
 make moral decisions. However, the rapid growth in artificial intelligence is outpacing the research
 in building explainable systems. In this paper, a number of problems around one facet of explainable
-artificial intelligence, training data, is explored. A solution to these problems is presented.
-Additionally, the human decision-making process in unavoidable accident scenarios is explored
-through qualitative analysis of survey results.
+artificial intelligence, training data, is explored. Possible solutions to these problems are
+presented. Additionally, the human decision-making process in unavoidable accident scenarios is
+explored through qualitative analysis of survey results.
 
 \chapter*{Acknowledgements}
 
@@ -50,67 +50,67 @@ through qualitative analysis of survey results.
 \FloatBarrier
 \chapter{Introduction}
 
-\begin{enumerate}
-    \item Autonomous vehicle technology is growing rapidly and AI is a key piece of that technology.
-    As this technology gets closer to attaining full autonomy, the AI deployed in these systems will
-    have greater responsibility than ever. These AI systems must be explainably fair, i.e., they must
-    both make decisions using only the least amount of information necessary for optimal performance
-    and make those decisions predictably and correctly. For example, the AI in an autonomous vehicle
-    does not need to be supplied with information about a pedestrian's race, even though race may be
-    an impactful trait in other fields, especially medical fields~\cite{sickeCellDisease}.
-    Furthermore, these AI systems must also be explainable for legal reasons, such as determining
-    which party is at fault in the event of a car accident or, in the European Union, complying with
-    a user's "right to explanation"~\cite{goodman2017european}.
-    
-    \item The demand for explainable AI is increasing, such as DARPA's Explainable Artificial
-    Intelligence (XAI) program~\cite{gunning2016explainable}. This program aims to develop
-    explainable AI systems such as in Figure~\ref{fig:darpa_xai}. There has also been a symposium
-    focusing on AI inclusivity towards marginalized
-    peoples~\cite{berkmanKleinCenterAI2017,aiAndInclusionSymposium}. This symposium illustrates the
-    increasing need to discuss AI fairness and inclusivity in a way that non-technical people can
-    understand. One facet of this need that this paper addresses is the question of specifically how
-    much one needs to care about possible biases in the various stages of AI architecture.
+This work has two primary goals. First, we seek to demonstrate how a neural network can learn a bias
+and empirically determine the severity of that bias. Classification accuracy testing will be
+employed to evaluate the trained neural network and determine if any bias was learned, and, if so,
+the severity of that bias. Second, we also seek to understand the decision-making process in humans
+behind making moral decisions in unavoidable accident scenarios, i.e., dilemmas. This part of the
+research will be done by surveying a group of people and performing qualitative analysis on the
+survey results. These results serve not only as a way to understand this decision-making process but
+also as a language and structure we can use to craft communications with those unfamiliar with
+artificial intelligence.
 
-    \begin{figure}[h]
-        \centering
-        \includegraphics[scale=1.1]{figures/xai-figure2.png}
-        \caption[]{DARPA's XAI Concept~\protect\cite{gunningXAIProgram}}
-        \label{fig:darpa_xai}
-    \end{figure}
-    
-    \item We seek to demonstrate how an AI can learn a bias and empirically determine the severity
-    of that bias. Classification accuracy testing will be employed to evaluate the trained AI and
-    determine if any bias was learned, and, if so, the severity of that bias.
+Chapter two provides an overview of what explainable AI is and the current demands for it, in
+addition to covering prior research into how humans think when presented with a dilemma. Chapter
+three discusses the architecture, training, and testing of a neural network and what questions we
+asked in the aforementioned survey. Chapter four analyses the neural network testing results and the
+survey results. Chapter five concludes this work and provides avenues for future inquiry.
 
-    \item We also seek to understand the decision-making process in humans behind making moral
-    decisions in unavoidable accident scenarios, i.e., dilemmas. This part of the research will be
-    done by surveying a group of people and performing qualitative analysis on the survey results.
-    These results serve not only as a way to understand this decision-making process but also as a
-    language and structure we can use to craft communications with less-technical people.
-\end{enumerate}
 
 \FloatBarrier
 \chapter{Background}
 
-\begin{enumerate}
-    \item Introduce background readings.
-    
-    \item Cite examples of AI that must (or will in the near future) make moral decisions.
-    \begin{itemize}
-        \item \cite{bojarski2016end} performs end-to-end learning which "[maps] raw pixels from a
-        single front-facing camera directly to steering commands". With this approach, the AI will
-        have to respond directly to pedestrians and other external stimuli.
-    \end{itemize}
-    
-    \item The Moral Machine experiment~\cite{awad2018moral} is prior research into people's
-    preferences in moral dilemmas. Participants are shown a moral dilemma involving an autonomous
-    vehicle, passengers, and pedestrians. In each dilemma, the participant must choose between
-    inaction, which typically results in the certain death of the pedestrians, and action, which
-    typically results in the certain death of the passengers. The study revealed three strong global
-    preferences towards sparing humans over animals, sparing more lives rather than fewer, and
-    sparing younger lives rather than older. The study also showed that some preferences vary
-    between countries depending on that country's propensity towards egalitarianism.
-\end{enumerate}
+Introduce background readings (maybe not first?).
+
+Autonomous vehicle technology is growing rapidly and AI is a key piece of that technology. As this
+technology gets closer to attaining full autonomy, the AI deployed in these systems will have
+greater responsibility than ever. These AI systems must be explainably fair, i.e., they must both
+make decisions using only the least amount of information necessary for optimal performance and make
+those decisions predictably and correctly. For example, the AI in an autonomous vehicle does not
+need to be supplied with information about a pedestrian's race, even though race may be an impactful
+trait in other fields, especially medical fields~\cite{sickeCellDisease}. Furthermore, these AI
+systems must also be explainable for legal reasons, such as determining which party is at fault in
+the event of a car accident or, in the European Union, complying with a user's "right to
+explanation"~\cite{goodman2017european}.
+
+The demand for explainable AI is increasing, as illustrated by DARPA's Explainable Artificial
+Intelligence (XAI) program~\cite{gunning2016explainable}. This program aims to develop explainable
+AI systems such as in Figure~\ref{fig:darpa_xai}. There has also been a symposium focusing on AI
+inclusivity towards marginalized peoples~\cite{berkmanKleinCenterAI2017,aiAndInclusionSymposium}.
+This symposium illustrates the increasing need to discuss AI fairness and inclusivity in a way that
+non-technical people can understand. One facet of this need that this paper addresses is the
+question of specifically how much one needs to care about possible biases in the various stages of
+AI architecture. Not all AI research involving morally responsible AI systems has a focus on
+explainability, however. NVIDIA trained an end-to-end convolutional neural network, which "[maps]
+raw pixels from a single front-facing camera directly to steering commands" \cite{bojarski2016end}.
+With this approach, the AI will have to respond directly to pedestrians and other external stimuli.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=1.1]{figures/xai-figure2.png}
+    \caption[]{DARPA's XAI Concept~\protect\cite{gunningXAIProgram}}
+    \label{fig:darpa_xai}
+\end{figure}
+
+Moving to the domain of how humans think about dilemmas, we look towards the Moral Machine
+experiment~\cite{awad2018moral}, which is prior research into people's preferences in moral
+dilemmas. This experiment involved an online survey in which participants are shown a moral dilemma
+involving an autonomous vehicle, passengers, and pedestrians. In each dilemma, the participant must
+choose between inaction, which typically results in the certain death of the pedestrians, and
+action, which typically results in the certain death of the passengers. The study revealed three
+strong global preferences towards sparing humans over animals, sparing more lives rather than fewer,
+and sparing younger lives rather than older. The study also showed that some preferences vary
+between countries depending on that country's propensity towards egalitarianism.
 
 \FloatBarrier
 \chapter{Methods}
@@ -329,8 +329,8 @@ the second option. $P(\neg J \mid O_2) = 0$, $P(J \mid O_2) = 1$.
 A group of primarily engineering-focused undergraduate college students was surveyed. These students
 were in attendance of an introductory ethics course, so their responses are likely more ethically
 sensitive than those of an average individual. The responses discussed later are still useful in
-crafting communications with those outside of AI research, but might not extend as easily toward the
-general public. Participation in the survey was voluntary and each question in the survey was
+crafting communications with those outside of AI research, but might not extend as easily towards
+the general public. Participation in the survey was voluntary and each question in the survey was
 optional. The survey question are:
 \begin{enumerate}
     \item If you had to choose between two accident scenarios, one in which a single person would
