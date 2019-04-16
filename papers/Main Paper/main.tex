@@ -458,154 +458,95 @@ A similar but opposite trend occurs when $P(O_1) < 0.4$ and $P(J \mid O_1) > 0.8
 \FloatBarrier
 \section{Avoiding Bias}
 
-Three ways for the neural network to learn a bias
-\begin{enumerate}
-    \item Flaws in data
-    \begin{enumerate}
-        \item Any information which is not strictly necessary for the neural network to make
-        effective decisions should not be given to the network. This especially affects end-to-end
-        networks such as the convolutional neural network in~\cite{bojarski2016end} because these
-        systems have an enormous variety of (sometimes) unfiltered data given to them. This approach
-        can increase the risk of the neural network learning a bias.
-    \end{enumerate}
-    
-    \item Flaws in AI architecture
-    \begin{enumerate}
-        \item This research uses a simple, shallow neural network to reduce architectural
-        complexity. Deeper networks, specifically deep convolutional networks, undoubtedly perform
-        better, but these network architectures suffer from increased design complexity and
-        increased training difficulty~\cite{mhaskar2016deep}.
+There are three primary ways through which an AI system can learn a bias. First, as this research
+has demonstrated, a bias can be learned through flaws in data. To combat this, we recommend that any
+information which is not strictly necessary for the neural network to make effective decisions
+should not be given to the network. This especially affects end-to-end networks such as the
+convolutional neural network in~\cite{bojarski2016end} because these systems have an enormous
+variety of (sometimes) unfiltered data given to them, which can increase the risk of the neural
+network learning a bias.
 
-        \item Neural networks used for image-based object detection suffer from predictive
-        inequality in detecting people of differing skin tones~\cite{wilson2019predictive}. Those
-        with skin tones in the Fitzpatrick range $[1, 3]$ are more accurately identified than those
-        with skin tones in the $[4, 6]$ range. Furthermore, this problem persists between networks
-        of different architectures. Although the authors of that research propose a different loss
-        function which decreases predictive inequality, one could imagine a totally different system
-        which does not use color cameras at all. Infrared cameras may serve as a good replacement
-        because they produce images which are easier to filter with traditional computer vision
-        techniques than images from color cameras are.
-    \end{enumerate}
-    
-    \item Flaws in testing
-    \begin{enumerate}
-        \item If one is concerned that a system may be less able to measure some attribute in a
-        certain environment, then the testing for the system may want to overrepresent that
-        attribute. In the context of~\cite{wilson2019predictive}, the test data set used might
-        consist of a majority of images of people with skin tones in the Fitzpatrick range $[4, 6]$,
-        regardless of whether the system is expected to operate in an environment consistent with
-        that skin tone distribution or not.
+Second, a bias can be learned through flaws in the AI system's architecture. This research uses a
+simple, shallow neural network to reduce architectural complexity. Deeper networks, specifically
+deep convolutional networks, undoubtedly perform better, but these network architectures suffer from
+increased design complexity and increased training difficulty~\cite{mhaskar2016deep}. Neural
+networks used for image-based object detection suffer from predictive inequality in detecting people
+of differing skin tones~\cite{wilson2019predictive}. In this instance, those with skin tones in the
+Fitzpatrick range $[1, 3]$ are more accurately identified than those with skin tones in the $[4, 6]$
+range. Furthermore, this problem persists between networks of different architectures. Although the
+authors of that research propose a different loss function which decreases predictive inequality,
+one could imagine a totally different system which does not use color cameras at all. Infrared
+cameras may serve as a good replacement because they produce images which are easier to filter with
+traditional computer vision techniques than images from color cameras are.
 
-        \item If a system should be equally sensitive to all of its inputs, then those input should
-        be represented equally during testing, even if a different distribution of inputs is
-        expected to be encountered when the system is deployed. In the case of autonomous vehicles,
-        this research assumed the neural network should treat all people equally, but in reality
-        this is a region-specific measure. The Moral Machine experiment measured strong regional
-        preferences for various aspects of decision-making during dilemmas~\cite{awad2018moral}. For
-        example, Eastern countries showed an almost nonexistent preference for sparing the young
-        compared to Western and Southern countries. Southern countries showed a strong preference
-        for sparing females compared to Western and Eastern countries. Not all regional preferences
-        can be reliably accounted for, however. Some preferences, such as the Eastern countries
-        stronger preference for sparing the lawful compared to Western and Southern countries, is
-        not entirely enforceable by AI systems. Some instances of lawfulness classification could be
-        reliable, such as detecting jaywalkers, but others, such as detecting unlawful intoxication,
-        are most likely difficult. There is, of course, the question of whether or not autonomous
-        vehicles should contain any regional preferences or whether they should be totally fair;
-        however, that is outside the scope of this paper.
-    \end{enumerate}
-\end{enumerate}
-    
+Finally, a bias can be learned, or more accurately not detected, through flaws in testing. If one is
+concerned that a system may be less able to measure some attribute in a certain environment, then
+the testing for the system may want to overrepresent that attribute. In the context
+of~\cite{wilson2019predictive}, the test data set used might consist of a majority of images of
+people with skin tones in the Fitzpatrick range $[4, 6]$, regardless of whether the system is
+expected to operate in an environment consistent with that skin tone distribution or not. Simply
+put, if a system should be equally sensitive to all of its inputs, then those inputs should be
+represented equally during testing, even if a different distribution of inputs is expected to be
+encountered when the system is deployed. This can get more complex in the real world, however. In
+the case of autonomous vehicles, this research assumed the neural network should treat all people
+equally, but in reality this is a region-specific measure. The Moral Machine experiment measured
+strong regional preferences for various aspects of decision-making during
+dilemmas~\cite{awad2018moral}. For example, Eastern countries showed an almost nonexistent
+preference for sparing the young compared to Western and Southern countries. Southern countries
+showed a strong preference for sparing females compared to Western and Eastern countries. Not all
+regional preferences can be reliably accounted for, however. Some preferences, such as the Eastern
+countries stronger preference for sparing the lawful compared to Western and Southern countries, is
+not entirely enforceable by AI systems. Some instances of lawfulness classification could be
+reliable, such as detecting jaywalkers, but others, such as detecting unlawful intoxication, are
+most likely difficult. There is, of course, the question of whether or not autonomous vehicles
+should contain any regional preferences or whether they should be totally fair; however, that is
+outside the scope of this paper.
+
 \FloatBarrier
 \section{Survey Results}
 
 Thirty-five survey responses were collected. We found several themes in these responses, which are
-summarized in Figure~\ref{fig:survey_analysis} and explained in greater detail here:
-\begin{enumerate}
-    \item Humans can be flawed
-    \begin{itemize}
-        \item Humans can have bias.
-        \item Flaws in humans can lead to flaws in AI systems design and in data sets.
-    \end{itemize}
-    
-    \item Data can be flawed
-    \begin{itemize}
-        \item AI systems trained on flawed data will show flawed performance.
-    \end{itemize}
-    
-    \item Value saving more lives over fewer
-    \begin{itemize}
-        \item This is consistent with one of the Moral Machine experiment's
-        findings~\cite{awad2018moral}.
-    \end{itemize}
-    
-    \item Unwillingness to kill
-    \begin{itemize}
-        \item Killing is generally unjustifiable; therefore, an action that causes a greater number
-        of people to be spared is not necessarily desirable.
-        \item If there is an option with a chance that people might not die, that option is more
-        desirable than an option containing one person who will certainly be killed, despite the
-        prior option containing more people.
-    \end{itemize}
-    
-    \item Demand for testing
-    \begin{itemize}
-        \item Because both humans and data can be flawed, testing must be employed to validate the
-        fairness of the AI system.
-        \item These tests must have great breadth and cover many scenarios and people, especially
-        minorities.
-        \item The data used for training and testing should be transparent.
-        \item The methods of testing should be transparent.
-        \item Good testing methodologies and good results can lead to trust in AI systems.
-    \end{itemize}
-\end{enumerate}
+summarized in Figure~\ref{fig:survey_analysis} and explained in greater detail here. Responses to
+question two show a strong preference to save more lives over fewer, which is consistent with the
+Moral Machine experiment's findings~\cite{awad2018moral}. There is also a general unwillingness to
+kill others. Killing is generally unjustifiable; therefore, an action that causes a greater number
+of people to be spared is not necessarily desirable. If there is an option with a chance that people
+might not die, that option is more desirable than an option containing one person who will certainly
+be killed, despite the prior option containing more people. Next, responses to questions three and
+four show a general understanding that humans can be flawed. Humans can have bias, both explicit and
+implicit, and flaws in humans can lead to flaws in AI systems design and in data sets. There is also
+a general understanding that data can be flawed and that AI systems trained on flawed data will show
+flawed performance. Finally, there is also a demand for testing in some form. The survey respondents
+can see that because both humans and data can be flawed, testing must be employed to validate the
+fairness of the AI system. They feel that these tests must have great breadth and cover many
+scenarios and people, especially minorities. They also think that the data used for training and
+testing should be transparent and the methods of testing should be transparent. Through good testing
+methodologies and good results, more people can place trust in AI systems.
 
-How to address these concerns
-\begin{itemize}
-    \item People can be flawed
-    \begin{itemize}
-        \item This can be addressed with architectural approaches to AI system design. We can
-        restrict what features the neural network has access to. We can evaluate different sensor
-        technologies and select the sensor that performs best in the system's expected operating
-        environment. We can employ low-level safety mechanisms to catch some erroneous decisions the
-        neural network may make.
-        \item Should I explain the restriction layer in more detail here? Perhaps link to a
-        publication, if there is one?
-    \end{itemize}
-    
-    \item Data can be flawed
-    \begin{itemize}
-        \item This can be addressed with sensitivity studies. This research provides a format to
-        determine an neural network's sensitivity to flawed data.
-    \end{itemize}
-
-    \item People have varying opinions of how an autonomous vehicle should react in dilemma
-    situations.
-    \begin{itemize}
-        \item An AI system operating an autonomous vehicle is in control at all times. The system
-        must decide what to do in a dilemma. There is no inaction: choosing inaction is equivalent
-        to choosing an action with the same result as inaction. Therefore, the system must be
-        programmed, either explicitly through traditional techniques or implicitly through machine
-        learning, to respond a specific way in a dilemma. Not all end-users may find the system's
-        programming ethically acceptable.
-
-        \item Some survey respondents expressed interest in a "personal AI" solution in which the
-        end-user of an autonomous vehicle can input their preferences to modify how the AI will
-        react in a dilemma.
-        
-        \item A personal AI system brings with it a number of ethical questions
-        \begin{itemize}
-            \item What parameters should be tunable? Certainly the end-user should not be able to
-            tell the AI to prefer one race over another.
-            \item Should the set of tunable parameters be regulated such that all autonomous
-            vehicles are required to have the same set of tunable parameters?
-            \item How liable is the autonomous vehicle manufacturer and any other parties involved
-            in training/testing the AI system?
-            \item How liable is the end-user in tuning their autonomous vehicle (perhaps a tuning
-            decision they made caused greater personal injury than if they had chosen a different
-            option).
-        \end{itemize}
-    \end{itemize}
-\end{itemize}
+There are a number of concerns to address. First, the concern that people can be flawed can be
+addressed with architectural approaches to AI system design. We can restrict what features the
+neural network has access to. We can evaluate different sensor technologies and select the sensor
+that performs best in the system's expected operating environment. We can employ low-level safety
+mechanisms to catch some erroneous decisions the neural network may make. Next, the concern that
+data can be flawed can be partially addressed with sensitivity studies of the AI systems being
+built. This research provides a format to determine a neural network's sensitivity to flawed data.
+Finally, it is clear that people have varying opinions of how an autonomous vehicle should react in
+dilemma situations. We know that an AI system operating an autonomous vehicle is in control at all
+times; therefore, the system must decide what to do in a dilemma. There is no inaction: choosing
+inaction is equivalent to choosing an action with the same result as inaction. Therefore, the system
+must be programmed, either explicitly through traditional techniques or implicitly through machine
+learning, to respond a specific way in a dilemma. Not all end-users may find the system's
+programming ethically permissible. The Moral Machine experiment revealed a number of regional
+preferences that could be incorporated to an autonomous vehicle's decision-making
+system~\cite{awad2018moral}. Some survey respondents expressed interest in a "personal AI" solution
+in which the end-user of an autonomous vehicle can input their preferences to modify how the AI will
+react in a dilemma; however, a system such as this bring with it a number of ethical questions. What
+parameters should be tunable? Certainly the end-user should not be able to tell the AI system to
+prefer one race over another. Should the set of tunable parameters be regulated such that all
+autonomous vehicles are required to have the same set of tunable parameters? How liable is the
+autonomous vehicle manufacturer and any other parties involved in training/testing the AI system?
+How liable is the end-user in tuning their autonomous vehicle (perhaps a tuning decision they made
+caused greater personal injury than if they had chosen a different option).
 
 \FloatBarrier
 \chapter{Conclusion and Future Work}
