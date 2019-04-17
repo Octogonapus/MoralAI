@@ -1,4 +1,4 @@
-\documentclass[]{report}
+\documentclass[paper=a4paper]{report}
 \usepackage[utf8]{inputenc}
 \usepackage{hyperref}
 \usepackage{amsmath}
@@ -10,6 +10,7 @@
 \usepackage{tikz}
 \usetikzlibrary{positioning}
 \usepackage{setspace}
+\usepackage[paper=a4paper,margin=1.25in]{geometry}
 
 \tikzset{%
   every neuron/.style={
@@ -76,8 +77,19 @@
         \Signature{Th\'{e}r\`{e}se M. Smith, Advisor}
         \vspace{1cm}
         \Signature{Yunus D. Telliel, Co-Advisor}
+
+        \vspace{2cm}
+        {
+            \small
+            This report represents work of WPI undergraduate students submitted to the faculty as
+            evidence of a degree requirement. WPI routinely publishes these reports on its web site
+            without editorial or peer review. For more information about the projects program at
+            WPI, see \url{http://www.wpi.edu/Academics/Projects}.
+        }
     \end{center}
 \end{titlepage}
+
+\newgeometry{margin=1.757in}
 
 \clearpage
 \mbox{}
