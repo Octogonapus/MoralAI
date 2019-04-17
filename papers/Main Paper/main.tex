@@ -565,24 +565,20 @@ party groups, which will lead to increased trust in AI systems among the public.
 \FloatBarrier
 \section{Future Work}
 
-\begin{itemize}
-    \item Explanations, whether of AI decisions, architecture, or other, must be delivered in a way
-    that the user can understand. As Gilpin puts it, "The success of this goal is tied to the
-    cognition, knowledge and biases of the user: for a system to be interpretable, it must produce
-    descriptions that are simple enough for a person to understand using a vocabulary that is
-    meaningful to the user"~\cite{gilpin2018explaining}. This paper has attempted to show
-    specifically how much care one must take in dealing with bias in data, but more attention is
-    needed in other areas of AI systems architecture.
-
-    \item Repeat this work's sensitivity testing on current state-of-the-art models and determine
-    their sensitivity to bias in training data.
-
-    \item Develop a software library to report correlations in data. This library would accept a
-    data set, analyse it to find any and all correlations between different attributes, and report
-    those correlations and their associated strengths. The intent is to use this software to
-    proactively detect possible false correlations in data sets before they are used for training or
-    testing.
-\end{itemize}
+There are three broad but key areas of future work that should be looked into. First, explanations,
+whether of AI decisions, architecture, or other, must be delivered in a way that the user can
+understand. As Gilpin puts it, "The success of this goal is tied to the cognition, knowledge and
+biases of the user: for a system to be interpretable, it must produce descriptions that are simple
+enough for a person to understand using a vocabulary that is meaningful to the
+user"~\cite{gilpin2018explaining}. This paper has attempted to show specifically how much care one
+must take in dealing with bias in data, but more attention is needed in other areas of AI systems
+architecture. Training data is only one part these complex systems. Second, this work's sensitivity
+testing should be repeated on current state-of-the-art models and determine their sensitivity to
+bias in training data. Finally, a software library could be developed to report correlations in
+data. This library would accept a data set, analyse it to find any and all correlations between
+different attributes, and report those correlations and their associated strengths. The intent is to
+use this software to proactively detect possible false correlations in data sets before they are
+used for training or testing.
 
 \bibliography{citations}
 \bibliographystyle{plain}
