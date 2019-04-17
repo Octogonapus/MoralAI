@@ -9,6 +9,7 @@
 \usepackage{placeins}
 \usepackage{tikz}
 \usetikzlibrary{positioning}
+\usepackage{setspace}
 
 \tikzset{%
   every neuron/.style={
@@ -24,21 +25,59 @@
   },
 }
 
-\graphicspath{{../../figures/}}
-
-\title{
-    {Moral AI IQP}\\
-    {\large Worcester Polytechnic Institute}\\
-    {\includegraphics[height=2in]{figures/WPI_Inst_Prim_FulClr.png}}
+\newcommand*{\SignatureAndDate}[1]{
+    \par\noindent\makebox[2.5in]{\hrulefill} \hfill\makebox[2.0in]{\hrulefill}
+    \par\noindent\makebox[2.5in][l]{#1}      \hfill\makebox[2.0in][l]{Date}
 }
-\author{Ryan Benasutti}
-\date{April 2019}
+
+\newcommand*{\Signature}[1]{
+    \par\noindent\makebox[2.0in]{\hrulefill}
+    \par\noindent\makebox[2.0in][c]{#1}
+}
+
+\graphicspath{{../../figures/}}
 
 \newcommand{\code}{\texttt}
 
 \begin{document}
 
-\maketitle
+\begin{titlepage}
+    \begin{flushright}
+        Project Number: ABU2
+    \end{flushright}
+
+    \vspace{0.5cm}
+
+    \begin{center}
+        \includegraphics[height=0.5in]{figures/WPI_Inst_Prim_FulClr.png}\\
+        Department of Computer Science\\
+
+        \vspace{0.75cm}
+
+        {
+            \setstretch{2.0}
+            EVALUATING BIAS IN NEURAL NETWORKS\\
+            An Interactive Qualifying Project Report\\
+            Submitted to the Faculty\\
+            of\\
+            WORCESTER POLYTECHNIC INSTITUTE\\
+            In partial fullfillment of the requirements for the\\
+            Degree of Bachelor of Science\\
+            by\\
+        }
+
+        \vspace{1cm}
+        \Signature{Ryan Benasutti}
+        
+        \vspace{1cm}
+        April 17, 2019
+
+        \vfill
+        \Signature{Th\'{e}r\`{e}se M. Smith, Advisor}
+        \vspace{1cm}
+        \Signature{Yunus D. Telliel, Co-Advisor}
+    \end{center}
+\end{titlepage}
 
 \clearpage
 \mbox{}
