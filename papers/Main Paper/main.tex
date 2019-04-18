@@ -124,7 +124,7 @@ and empirically determine the severity of that bias. Classification accuracy tes
 employed to evaluate the trained neural network and determine if any bias was learned, and, if so,
 the severity of that bias. Second, we also seek to understand the decision-making process in humans
 behind making moral decisions in unavoidable accident scenarios, i.e., dilemmas. This part of the
-research will be done by surveying a group of people and performing qualitative analysis on the
+research will be done by surveying a group of people and performing qualitative analysis of the
 survey results. These results serve not only as a way to understand this decision-making process but
 also as a language and structure we can use to craft communications with those unfamiliar with
 artificial intelligence.
@@ -142,7 +142,7 @@ survey results. Chapter five concludes this work and provides avenues for future
 Introduce background readings (maybe not first?).
 
 Autonomous vehicle technology is growing rapidly and AI is a key piece of that technology. As this
-technology gets closer to attaining full autonomy, the AI deployed in these systems will have
+technology gets closer to attaining full autonomy, the AI deployed in these systems will have a
 greater responsibility than ever. These AI systems must be explainably fair, i.e., they must both
 make decisions using only the least amount of information necessary for optimal performance and make
 those decisions predictably and correctly. For example, the AI in an autonomous vehicle does not
@@ -176,28 +176,28 @@ building irresponsible AI systems. These systems affect, or will affect in the n
 people's lives. Take, for example, the case of an autonomous vehicle. By allowing autonomous
 vehicles in our society, we are accepting the dangers they bring in exchange for the benefits they
 provide; among these dangers are injury and loss of life to those involved in vehicular accidents.
-Those developing AI systems therefore have a responsibility to improve these systems and reduce the
-dangers associated with their use. They also have a responsibility to "assess, and try to inform
+Those developing AI systems, therefore, have a responsibility to improve these systems and reduce
+the dangers associated with their use. They also have a responsibility to "assess, and try to inform
 others of, the possible social consequences" of these systems~\cite{patrick2017robot}. We can then
-conclude that building AI systems carries with it moral responsibility. This realization can also be
-seen in a proposed bill, the "Algorithmic Accountability Act of 2019" by Senator Wyden, which would
-have the Federal Trade Commission "create regulations requiring companies under its jurisdiction to
-conduct impact assessments of highly sensitive automated decision systems", require companies
-"assess their use of automated decision systems", and require companies "correct any issues they
-discover during the impact assessments"~\cite{wyden2019bill}. This bill is effectively an effort to
-extend anti-discrimination laws to "automated decision systems", which, as of late, are typically AI
-systems.
+conclude that building an AI system carries with it moral responsibility. This realization can also
+be seen in a proposed bill, the "Algorithmic Accountability Act of 2019" by Senator Wyden, which
+would have the Federal Trade Commission "create regulations requiring companies under its
+jurisdiction to conduct impact assessments of highly sensitive automated decision systems", require
+companies "assess their use of automated decision systems", and require companies "correct any
+issues they discover during the impact assessments"~\cite{wyden2019bill}. This bill is effectively
+an effort to extend anti-discrimination laws to "automated decision systems", which, as of late, are
+typically AI systems.
 
-The software architects, engineers, and researchers which build AI systems must address moral
-concerns about explainability and fairness in their products. However, they may be morally uncertain
-with respect to how they can address these concerns. Resolving this moral uncertainty is a
-nontrivial problem. Simply choosing a resolving act based on personal preference is clearly
-unacceptable. A "Continue Deliberating" strategy is equivalent to an instance of the previous
-strategy, so it is also unacceptable~\cite{patrick2017robot}. An ethical framework, then, is
-required to resolve this uncertainty. The work of Bhargava and Kim \cite{patrick2017robot} proposes
-an "Expected Moral Value" approach which acts as an ethical meta-framework one can use to resolve
-this moral uncertainty. While this cannot act as a universal solution, it shows progress in the
-right direction and serves as a starting point of inquiry for those building AI systems.
+The software architects, engineers, and researchers who build AI systems must address moral concerns
+about explainability and fairness in their products. However, they may be morally uncertain with
+respect to how they can address these concerns. Resolving this moral uncertainty is a nontrivial
+problem. Simply choosing a resolving act based on personal preference is clearly unacceptable. A
+"Continue Deliberating" strategy is equivalent to an instance of the previous strategy, so it is
+also unacceptable~\cite{patrick2017robot}. An ethical framework, then, is required to resolve this
+uncertainty. The work of Bhargava and Kim \cite{patrick2017robot} proposes an "Expected Moral Value"
+approach which acts as an ethical meta-framework one can use to resolve this moral uncertainty.
+While this cannot act as a universal solution, it shows progress in the right direction and serves
+as a starting point of inquiry for those building AI systems.
 
 Moving to the domain of how humans think about dilemmas, we look towards the Moral Machine
 experiment~\cite{awad2018moral}, which is prior research into people's preferences in moral
@@ -288,7 +288,7 @@ encoded into three increments, as shown in Table~\ref{tab:example_boolean_attrib
 \FloatBarrier
 \section{Data Storage}
 
-Data is stored using the JSON format using a serialization process called pickling via the Python
+Data is stored in the JSON format using a serialization process called pickling via the Python
 library \href{https://jsonpickle.github.io/}{jsonpickle}. This process was chosen because it
 produces easily machine-readable files and because JSON is a popular data storage format. The
 purpose of storing the generated data sets is to keep the data consistent between test iterations
@@ -506,8 +506,8 @@ of the contour plot corresponding to Figure~\ref{fig:test_40-60_100-0_0-100_accu
 of worst accuracy, we can see that the real value of $P(J)$ is close to zero. In other words, the
 network performs worst when it picks an option because that option is absent of jaywalkers (i.e.,
 when the network makes a decision based on the bias it learned rather than the rule used to label
-the test data set). This is further evidence that the network has learned a bias against jaywalkers.
-A similar but opposite trend occurs when $P(O_1) < 0.4$ and $P(J \mid O_1) > 0.8$.
+the test data set). This is further evidence that the network has learned bias against jaywalkers. A
+similar but opposite trend occurs when $P(O_1) < 0.4$ and $P(J \mid O_1) > 0.8$.
 
 \FloatBarrier
 \section{Avoiding Bias}
@@ -533,8 +533,8 @@ one could imagine a totally different system which does not use color cameras at
 cameras may serve as a good replacement because they produce images which are easier to filter with
 traditional computer vision techniques than images from color cameras are.
 
-Finally, a bias can be learned, or more accurately not detected, through flaws in testing. If one is
-concerned that a system may be less able to measure some attribute in a certain environment, then
+Finally, a bias can be learned, or more accurately, not detected, through flaws in testing. If one
+is concerned that a system may be less able to measure some attribute in a certain environment, then
 the testing for the system may want to overrepresent that attribute. In the context
 of~\cite{wilson2019predictive}, the test data set used might consist of a majority of images of
 people with skin tones in the Fitzpatrick range $[4, 6]$, regardless of whether the system is
@@ -543,7 +543,7 @@ put, if a system should be equally sensitive to all of its inputs, then those in
 represented equally during testing, even if a different distribution of inputs is expected to be
 encountered when the system is deployed. This can get more complex in the real world, however. In
 the case of autonomous vehicles, this research assumed the neural network should treat all people
-equally, but in reality this is a region-specific measure. The Moral Machine experiment measured
+equally, but in reality, this is a region-specific measure. The Moral Machine experiment measured
 strong regional preferences for various aspects of decision-making during
 dilemmas~\cite{awad2018moral}. For example, Eastern countries showed an almost nonexistent
 preference for sparing the young compared to Western and Southern countries. Southern countries
@@ -567,15 +567,15 @@ kill others. Killing is generally unjustifiable; therefore, an action that cause
 of people to be spared is not necessarily desirable. If there is an option with a chance that people
 might not die, that option is more desirable than an option containing one person who will certainly
 be killed, despite the prior option containing more people. Next, responses to questions three and
-four show a general understanding that humans can be flawed. Humans can have bias, both explicit and
-implicit, and flaws in humans can lead to flaws in AI systems design and in data sets. There is also
-a general understanding that data can be flawed and that AI systems trained on flawed data will show
-flawed performance. Finally, there is also a demand for testing in some form. The survey respondents
-can see that because both humans and data can be flawed, testing must be employed to validate the
-fairness of the AI system. They feel that these tests must have great breadth and cover many
-scenarios and people, especially minorities. They also think that the data used for training and
-testing should be transparent and the methods of testing should be transparent. Through good testing
-methodologies and good results, more people can place trust in AI systems.
+four show a general understanding that humans can be flawed. Humans can have a bias, both explicit
+and implicit, and flaws in humans can lead to flaws in AI systems design and in data sets. There is
+also a general understanding that data can be flawed and that AI systems trained on flawed data will
+show flawed performance. Finally, there is also a demand for testing in some form. The survey
+respondents can see that because both humans and data can be flawed, testing must be employed to
+validate the fairness of the AI system. They feel that these tests must have great breadth and cover
+many scenarios and people, especially minorities. They also think that the data used for training
+and testing should be transparent and the methods of testing should be transparent. Through good
+testing methodologies and good results, more people can place trust in AI systems.
 
 There are a number of concerns to address. First, the concern that people can be flawed can be
 addressed with architectural approaches to AI system design. We can restrict what features the
@@ -626,13 +626,13 @@ biases of the user: for a system to be interpretable, it must produce descriptio
 enough for a person to understand using a vocabulary that is meaningful to the
 user"~\cite{gilpin2018explaining}. This paper has attempted to show specifically how much care one
 must take in dealing with bias in data, but more attention is needed in other areas of AI systems
-architecture. Training data is only one part these complex systems. Second, this work's sensitivity
-testing should be repeated on current state-of-the-art models and determine their sensitivity to
-bias in training data. Finally, a software library could be developed to report correlations in
-data. This library would accept a data set, analyse it to find any and all correlations between
-different attributes, and report those correlations and their associated strengths. The intent is to
-use this software to proactively detect possible false correlations in data sets before they are
-used for training or testing.
+architecture. Training data is only one part of these complex systems. Second, this work's
+sensitivity testing should be repeated on current state-of-the-art models and determine their
+sensitivity to bias in training data. Finally, a software library could be developed to report
+correlations in data. This library would accept a data set, analyze it to find any and all
+correlations between different attributes, and report those correlations and their associated
+strengths. The intent is to use this software to proactively detect possible false correlations in
+data sets before they are used for training or testing.
 
 \bibliography{citations}
 \bibliographystyle{plain}
