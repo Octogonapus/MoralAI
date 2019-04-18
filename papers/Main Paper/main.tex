@@ -139,18 +139,16 @@ survey results. Chapter five concludes this work and provides avenues for future
 \FloatBarrier
 \chapter{Background}
 
-Introduce background readings (maybe not first?).
-
 Autonomous vehicle technology is growing rapidly and AI is a key piece of that technology. As this
 technology gets closer to attaining full autonomy, the AI deployed in these systems will have a
-greater responsibility than ever. These AI systems must be explainably fair, i.e., they must both
-make decisions using only the least amount of information necessary for optimal performance and make
-those decisions predictably and correctly. For example, the AI in an autonomous vehicle does not
-need to be supplied with information about a pedestrian's race, even though race may be an impactful
-trait in other fields, especially medical fields~\cite{sickeCellDisease}. Furthermore, these AI
-systems must also be explainable for legal reasons, such as determining which party is at fault in
-the event of a car accident or, in the European Union, complying with a user's "right to
-explanation"~\cite{goodman2017european}.
+greater responsibility than ever. These AI systems must be explainably fair, i.e., they must make
+decisions using only the least amount of information necessary for optimal performance, make those
+decisions predictably and correctly, and be able to summarize the reasons for making a decision. For
+example, the AI in an autonomous vehicle does not need to be supplied with information about a
+pedestrian's race, even though race may be an impactful trait in other fields, especially medical
+fields~\cite{sickeCellDisease}. Furthermore, these AI systems must also be explainable for legal
+reasons, such as determining which party is at fault in the event of a car accident or, in the
+European Union, complying with a user's "right to explanation"~\cite{goodman2017european}.
 
 The demand for explainable AI is increasing, as illustrated by DARPA's Explainable Artificial
 Intelligence (XAI) program~\cite{gunning2016explainable}. This program aims to develop explainable
@@ -162,7 +160,9 @@ question of specifically how much one needs to care about possible biases in the
 AI architecture. Not all AI research involving morally responsible AI systems has a focus on
 explainability, however. NVIDIA trained an end-to-end convolutional neural network, which "[maps]
 raw pixels from a single front-facing camera directly to steering commands" \cite{bojarski2016end}.
-With this approach, the AI will have to respond directly to pedestrians and other external stimuli.
+With this approach, the AI will have to respond directly to pedestrians and other external stimuli;
+this is particularly concerning because deep neural networks have been shown to be easily fooled
+into making high confidence predictions on nonsensical inputs~\cite{nguyen2015fooled}.
 
 \begin{figure}[h]
     \centering
@@ -208,6 +208,14 @@ action, which typically results in the certain death of the passengers. The stud
 strong global preferences towards sparing humans over animals, sparing more lives rather than fewer,
 and sparing younger lives rather than older. The study also showed that some preferences vary
 between countries depending on that country's propensity towards egalitarianism.
+
+As the demand for XAI has increased, so has the research in that area. LIME can explain which parts
+of an input correlate to a classification by sampling related inputs to construct a proxy
+model~\cite{ribeiro2016should}. The work of Baehrens et al. estimates local explanations by
+differentiating the kernel function~\cite{baehrens2010explain}. The work of Bansal et al.
+automatically captures failure modes into "specification sheets" which non-experts can
+understand~\cite{bansal2014towards}. DeepRED can extract rules from deep neural networks using a
+decision tree~\cite{zilke2016deepred}.
 
 \FloatBarrier
 \chapter{Methods}
